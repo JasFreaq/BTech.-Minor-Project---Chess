@@ -22,6 +22,8 @@ public class BoardManager : MonoBehaviour
 
     #endregion
 
+    public Tile[,] TileSet => _tileSet;
+
     public IReadOnlyDictionary<int, Tile> TileRefs => _tileRefs;
 
     private void Awake()

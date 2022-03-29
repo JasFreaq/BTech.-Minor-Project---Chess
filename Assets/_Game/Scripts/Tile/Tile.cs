@@ -10,29 +10,28 @@ public class Tile : MonoBehaviour
 
     private BoxCollider _collider;
     private Image _image;
-    private Material _baseMaterial;
 
     private bool _isSelected;
-
+    
     public BoxCollider Collider => _collider;
 
     public Vector2Int Index { get; set; }
 
+    public ChessPiece HeldPiece { get; set; }
+
     private void Awake()
     {
         _collider = GetComponent<BoxCollider>();
-        
         _image = GetComponent<Image>();
-        _baseMaterial = _image.material;
     }
 
-    public void Hover(bool selectionMade, bool hovered)
+    public void SetHover(bool selectionMade, bool hovered)
     {
         if (hovered)
         {
             if (!selectionMade)
             {
-                _image.material = TileSceneParamsHolder.Instance.HoverMat;
+                _image.material = SceneParamsHolder.Instance.HoverMat;
                 _image.color = new Color(0, 0, 0, 1);
             }
 
@@ -49,17 +48,22 @@ public class Tile : MonoBehaviour
         }
     }
     
-    public void Select(bool selected)
+    public void SetSelection(bool selected)
     {
         _isSelected = selected;
         if (_isSelected)
         {
-            _image.material = TileSceneParamsHolder.Instance.SelectMat;
-            _image.color = new Color(0, 0, 0, 1);
+            Select();
         }
         else
         {
             _image.color = new Color(0, 0, 0, 0);
         }
+    }
+
+    private void Select()
+    {
+        _image.material = SceneParamsHolder.Instance.SelectMat;
+        _image.color = new Color(0, 0, 0, 1);
     }
 }

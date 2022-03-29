@@ -159,8 +159,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7df94739db2ae8f41aa8c006c4b21753, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _hoverMat: {fileID: 2100000, guid: 5708d599b47ace94795b69662b4aace4, type: 2}
-  _selectMat: {fileID: 2100000, guid: 984b6f7844acbc849ab41d12a5edd5fe, type: 2}
+  _hoverMat: {fileID: 2100000, guid: 984b6f7844acbc849ab41d12a5edd5fe, type: 2}
+  _selectMat: {fileID: 2100000, guid: 5708d599b47ace94795b69662b4aace4, type: 2}
 --- !u!1001 &8545777057050179513
 PrefabInstance:
   m_ObjectHideFlags: 0

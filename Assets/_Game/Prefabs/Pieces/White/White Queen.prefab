@@ -1,5 +1,22 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-7011605479597976379
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6165464553149846675}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc9f9f30d3df8904ca772b193650cacf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _pieceData:
+    _playerType: 0
+    _pieceType: 4
+  _startIndices:
+  - {x: 3, y: 0}
 --- !u!1001 &1784069949378657002
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -110,10 +127,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2794642010873138539, guid: c3864a114b5e21f45ada51118ce7c3af, type: 3}
       propertyPath: m_Name
-      value: White  Queen
+      value: White Queen
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c3864a114b5e21f45ada51118ce7c3af, type: 3}
+--- !u!1 &6165464553149846675 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2794642010873138539, guid: c3864a114b5e21f45ada51118ce7c3af, type: 3}
+  m_PrefabInstance: {fileID: 8311588011380333048}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &6961222712997239190 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1424134114833629294, guid: c3864a114b5e21f45ada51118ce7c3af, type: 3}
