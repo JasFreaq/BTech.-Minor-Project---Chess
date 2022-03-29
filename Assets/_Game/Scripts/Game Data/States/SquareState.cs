@@ -2,9 +2,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public struct SquareState
+[System.Serializable]
+public class SquareState
 {
-    public PlayerType PlayerType { get; set; }
+    public PieceData _heldPiece;
 
-    public PieceType PieceType { get; set; }
+    public SquareState() {}
+
+    public SquareState(PieceData pieceData)
+    {
+        _heldPiece = pieceData;
+    }
+
+    public PieceData HeldPiece
+    {
+        get { return _heldPiece; }
+    }
 }
