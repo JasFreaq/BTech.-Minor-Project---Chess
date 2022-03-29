@@ -4,15 +4,13 @@ using UnityEngine;
 
 public class PieceManager : MonoBehaviour
 {
+    #region Singleton Pattern
+
     private static PieceManager _instance;
 
-    public static PieceManager Instance
-    {
-        get
-        {
-            return _instance;
-        }
-    }
+    public static PieceManager Instance => _instance;
+
+    #endregion
 
     private void Awake()
     {

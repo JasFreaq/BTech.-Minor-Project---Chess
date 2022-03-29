@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public class SquareState
+public class TileState
 {
     public PieceData _heldPiece;
 
-    public SquareState() {}
+    public TileState() {}
 
-    public SquareState(PieceData pieceData)
+    public TileState(PieceData pieceData)
     {
         _heldPiece = pieceData;
     }

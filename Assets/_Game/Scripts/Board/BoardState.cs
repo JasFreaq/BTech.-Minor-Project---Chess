@@ -10,13 +10,13 @@ public class BoardState
 
     public BoardState()
     {
-        Board = new SquareState[8, 8];
+        Board = new TileState[8, 8];
     }
     
-    public BoardState(SquareState[,] boardStates)
+    public BoardState(TileState[,] boardStates)
     {
         Board = boardStates;
     }
 
-    public SquareState[,] Board { get; set; }
+    public TileState[,] Board { get; set; }
 }
