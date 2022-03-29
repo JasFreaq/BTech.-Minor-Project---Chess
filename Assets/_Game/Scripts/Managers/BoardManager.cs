@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class BoardManager : MonoBehaviour
 {
+    [Header("Tiles")]
     [SerializeField] private float _tileSize = 1f;
     [SerializeField] private GameObject _tilePrefab;
 
