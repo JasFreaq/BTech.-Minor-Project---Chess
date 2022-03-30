@@ -179,6 +179,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 111801765}
+  - component: {fileID: 111801764}
   m_Layer: 0
   m_Name: Game Manager
   m_TagString: Untagged
@@ -186,6 +187,24 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &111801764
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 111801763}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7df94739db2ae8f41aa8c006c4b21753, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _pieceMoveTime: 0.8
+  _pieceScaleTime: 0.8
+  _hoverMat: {fileID: 2100000, guid: 984b6f7844acbc849ab41d12a5edd5fe, type: 2}
+  _selectMat: {fileID: 2100000, guid: 5708d599b47ace94795b69662b4aace4, type: 2}
+  _validMat: {fileID: 2100000, guid: 323cf4bf033c9c645a1dc92fd749594f, type: 2}
+  _captureMat: {fileID: 2100000, guid: ef7bbcc2eef8e0f43b1ab027f4c7f7ff, type: 2}
 --- !u!4 &111801765
 Transform:
   m_ObjectHideFlags: 0
@@ -610,7 +629,7 @@ MonoBehaviour:
   _captureZoneSize: 6
   _whiteZoneRef: {fileID: 692885156}
   _blackZoneRef: {fileID: 1810828076}
-  _capturedPieceScale: {x: 0.4, y: 0.4, z: 0.4}
+  _capturedPieceScale: {x: 0.5, y: 0.5, z: 0.5}
 --- !u!1001 &8545777057796018931
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -670,5 +689,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Game Board
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2027415091, guid: 347649c3347b15447be232309eb92ae1, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 347649c3347b15447be232309eb92ae1, type: 3}

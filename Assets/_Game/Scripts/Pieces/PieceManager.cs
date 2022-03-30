@@ -30,7 +30,6 @@ public class PieceManager : MonoBehaviour
     public ChessPiece CurrentSelection
     {
         get => _currentSelection;
-        set { _currentSelection = value; }
     }
 
     private void Awake()
@@ -55,9 +54,24 @@ public class PieceManager : MonoBehaviour
                     pieceRot = Quaternion.Euler(0, 180, 0);
 
                 ChessPiece piece = Instantiate(piecePrefab, piecePos, pieceRot, transform);
+                piece.GenerateValidMoves(new Vector2Int(startIndex.y, startIndex.x));
                 BoardManager.Instance.TileSet[startIndex.y, startIndex.x].HeldPiece = piece;
             }
         }
+    }
+
+    public void SelectPiece(ChessPiece selectedPiece, Vector2Int tileIndex)
+    {
+        _currentSelection = selectedPiece;
+        _currentSelection.GeneratePossibleMoves();
+        BoardManager.Instance.HighlightPossibleMoves(_currentSelection.PossibleMoves);
+
+    }
+
+    public void UnselectPiece()
+    {
+        _currentSelection = null;
+        BoardManager.Instance.ResetHighlightedTiles();
     }
 
     public void CapturePiece(ChessPiece capturedPiece)
@@ -91,11 +105,14 @@ public class PieceManager : MonoBehaviour
 
         capturedPiece.SetScale(_capturedPieceScale);
     }
-
-    public void MoveCurrentSelectedPiece(Vector2Int newTileIndex)
+    
+    public void MoveSelectedPieceToTile(Vector2Int newTileIndex)
     {
         Vector3 piecePos = new Vector3(newTileIndex.y, 0.001f, newTileIndex.x);
         _currentSelection.SetPosition(piecePos);
+        _currentSelection.GenerateValidMoves(newTileIndex);
+        
         _currentSelection = null;
+        BoardManager.Instance.ResetHighlightedTiles();
     }
 }

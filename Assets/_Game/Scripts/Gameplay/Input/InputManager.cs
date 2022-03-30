@@ -8,7 +8,7 @@ public abstract class InputManager : MonoBehaviour
     protected Tile _currentSelectedTile;
     protected Tile _previousSelectedTile;
 
-    protected bool _currentlySelected;
+    protected bool _isPieceSelected;
 
     private void Update()
     {
@@ -23,7 +23,7 @@ public abstract class InputManager : MonoBehaviour
         {
             if (_currentSelectedTile == tile)
             {
-                PieceManager.Instance.CurrentSelection = null;
+                PieceManager.Instance.UnselectPiece();
                 UnselectTile();
             }
             else
@@ -45,7 +45,7 @@ public abstract class InputManager : MonoBehaviour
         }
         else
         {
-            PieceManager.Instance.CurrentSelection = _currentSelectedTile.HeldPiece;
+            PieceManager.Instance.SelectPiece(_currentSelectedTile.HeldPiece, _currentSelectedTile.Index);
         }
     }
 
@@ -59,20 +59,21 @@ public abstract class InputManager : MonoBehaviour
         _previousSelectedTile.HeldPiece = null;
         _currentSelectedTile.HeldPiece = PieceManager.Instance.CurrentSelection;
 
-        PieceManager.Instance.MoveCurrentSelectedPiece(_currentSelectedTile.Index);
+        PieceManager.Instance.MoveSelectedPieceToTile(_currentSelectedTile.Index);
+        BoardManager.Instance.ResetHighlightedTiles();
     }
 
     protected void SelectTile(Tile tile)
     {
         _currentSelectedTile = tile;
         _currentSelectedTile.SetSelection(true);
-        _currentlySelected = true;
+        _isPieceSelected = true;
     }
 
     protected void UnselectTile()
     {
         _currentSelectedTile.SetSelection(false);
         _currentSelectedTile = null;
-        _currentlySelected = false;
+        _isPieceSelected = false;
     }
 }

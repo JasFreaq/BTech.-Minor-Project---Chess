@@ -14,6 +14,8 @@ public class BoardManager : MonoBehaviour
     private readonly Tile[,] _tileSet = new Tile[8, 8];
     private readonly Dictionary<int, Tile> _tileRefs = new Dictionary<int, Tile>(64);
 
+    private List<Tile> _highlightedTiles = new List<Tile>();
+
     #region Singleton Pattern
 
     private static BoardManager _instance;
@@ -59,5 +61,33 @@ public class BoardManager : MonoBehaviour
                 _tileRefs.Add(tile.Collider.GetInstanceID(), tile);
             }
         }
+    }
+
+    public void HighlightPossibleMoves(List<Vector2Int> possibleMoves)
+    {
+        foreach (Vector2Int possibleMove in possibleMoves)
+        {
+            Tile tile = _tileSet[possibleMove.y, possibleMove.x];
+            if (tile.HeldPiece == null)
+            {
+                tile.SetValid(true);
+            }
+            else
+            {
+                tile.SetCapturable(true);
+            }
+
+            _highlightedTiles.Add(tile);
+        }
+    }
+
+    public void ResetHighlightedTiles()
+    {
+        foreach (Tile tile in _highlightedTiles)
+        {
+            tile.Reset();
+        }
+
+        _highlightedTiles.Clear();
     }
 }

@@ -3,14 +3,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ChessPiece : MonoBehaviour
+public abstract class ChessPiece : MonoBehaviour
 {
     [SerializeField] protected PieceData _pieceData;
     [SerializeField] private Vector2Int[] _startIndices;
 
+    protected List<Vector2Int> _validMoves = new List<Vector2Int>();
+    protected List<Vector2Int> _possibleMoves = new List<Vector2Int>();
+
     private Vector3 _initialPosition, _initialScale;
     private Vector3 _desiredPosition, _desiredScale;
-    private float _moveSpeed, _scaleSpeed;
+    private float _moveTime, _scaleTime;
     private float _moveStartTime, _scaleStartTime;
     private bool _currentlyMoving, _currentlyScaling;
 
@@ -18,10 +21,12 @@ public class ChessPiece : MonoBehaviour
 
     public Vector2Int[] StartIndices => _startIndices;
 
+    public List<Vector2Int> PossibleMoves => _possibleMoves;
+
     private void Start()
     {
-        _moveSpeed = SceneParamsHolder.Instance.PieceMoveSpeed;
-        _scaleSpeed = SceneParamsHolder.Instance.PieceScaleSpeed;
+        _moveTime = SceneParamsHolder.Instance.PieceMoveTime;
+        _scaleTime = SceneParamsHolder.Instance.PieceScaleTime;
     }
 
     private void Update()
@@ -30,11 +35,15 @@ public class ChessPiece : MonoBehaviour
         UpdateScale();
     }
 
+    public abstract void GenerateValidMoves(Vector2Int pieceIndex);
+
+    public abstract void GeneratePossibleMoves();
+
     private void UpdatePosition()
     {
         if (_currentlyMoving)
         {
-            float t = (Time.time - _moveStartTime) * _moveSpeed;
+            float t = (Time.time - _moveStartTime) / _moveTime;
             transform.position = Vector3.Lerp(_initialPosition, _desiredPosition, t);
 
             if (Vector3.Distance(transform.position, _desiredPosition) < Mathf.Epsilon)
@@ -49,7 +58,7 @@ public class ChessPiece : MonoBehaviour
     {
         if (_currentlyScaling)
         {
-            float t = (Time.time - _scaleStartTime) * _scaleSpeed;
+            float t = (Time.time - _scaleStartTime) / _scaleTime;
             transform.localScale = Vector3.Lerp(_initialScale, _desiredScale, t);
 
             if ((transform.localScale - _desiredScale).magnitude < Mathf.Epsilon)

@@ -12,7 +12,12 @@ public class Tile : MonoBehaviour
     private Image _image;
 
     private bool _isSelected;
-    
+
+    private Material _hoverMat;
+    private Material _selectMat;
+    private Material _validMat;
+    private Material _captureMat;
+
     public BoxCollider Collider => _collider;
 
     public Vector2Int Index { get; set; }
@@ -25,13 +30,21 @@ public class Tile : MonoBehaviour
         _image = GetComponent<Image>();
     }
 
+    private void Start()
+    {
+        _hoverMat = SceneParamsHolder.Instance.HoverMat;
+        _selectMat = SceneParamsHolder.Instance.SelectMat;
+        _validMat = SceneParamsHolder.Instance.ValidMat;
+        _captureMat = SceneParamsHolder.Instance.CaptureMat;
+    }
+
     public void SetHover(bool selectionMade, bool hovered)
     {
         if (hovered)
         {
             if (!selectionMade)
             {
-                _image.material = SceneParamsHolder.Instance.HoverMat;
+                _image.material = _hoverMat;
                 _image.color = new Color(0, 0, 0, 1);
             }
 
@@ -41,7 +54,7 @@ public class Tile : MonoBehaviour
         {
             if (!selectionMade)
             {
-                _image.color = new Color(0, 0, 0, 0);
+                Reset();
             }
 
             _highlightBorder.SetActive(false);
@@ -53,17 +66,45 @@ public class Tile : MonoBehaviour
         _isSelected = selected;
         if (_isSelected)
         {
-            Select();
+            _image.material = _selectMat;
+            _image.color = new Color(0, 0, 0, 1);
         }
         else
         {
-            _image.color = new Color(0, 0, 0, 0);
+            Reset();
         }
     }
 
-    private void Select()
+    public void SetValid(bool valid)
     {
-        _image.material = SceneParamsHolder.Instance.SelectMat;
-        _image.color = new Color(0, 0, 0, 1);
+        if (valid)
+        {
+            _image.material = _validMat;
+            _image.color = new Color(0, 0, 0, 1);
+        }
+        else
+        {
+            Reset();
+        }
+    }
+
+    public void SetCapturable(bool capturable)
+    {
+        if (capturable)
+        {
+            _image.material = _captureMat;
+            _image.color = new Color(0, 0, 0, 1);
+        }
+        else
+        {
+            Reset();
+        }
+    }
+
+    public void Reset()
+    {
+        _isSelected = false;
+        _image.color = new Color(0, 0, 0, 0);
+        _highlightBorder.SetActive(false);
     }
 }

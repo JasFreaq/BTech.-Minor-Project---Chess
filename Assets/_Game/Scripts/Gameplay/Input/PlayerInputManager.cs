@@ -26,26 +26,40 @@ public class PlayerInputManager : InputManager
         {
             Tile currentHoveredTile = BoardManager.Instance.TileRefs[hit.collider.GetInstanceID()];
 
-            HoverTile(currentHoveredTile);
-            //if (PieceManager.Instance.CurrentSelection)
-            //{
+            if (PieceManager.Instance.CurrentSelection)
+            {
+                List<Vector2Int> possibleMoves = PieceManager.Instance.CurrentSelection.PossibleMoves;
+                Vector2Int tileIndex = new Vector2Int(currentHoveredTile.Index.y, currentHoveredTile.Index.x);
+                bool foundValidTile = false;
+                
+                foreach (Vector2Int possibleMove in possibleMoves)
+                {
+                    if (tileIndex == possibleMove)
+                    {
+                        HoverTile(currentHoveredTile);
+                        foundValidTile = true;
+                        break;
+                    }
+                }
 
-            //}
-            //else if (currentHoveredTile.HeldPiece 
-            //    && currentHoveredTile.HeldPiece.PieceData.PlayerType == _playerTeam) 
-            //{
-            //    HoverTile(currentHoveredTile);
-            //}
-            //else
-            //{
-            //    UnhoverTile();
-            //}
+                if (!foundValidTile)
+                    UnhoverTile();
+            }
+            else if (currentHoveredTile.HeldPiece
+                && currentHoveredTile.HeldPiece.PieceData.PlayerType == _playerTeam)
+            {
+                HoverTile(currentHoveredTile);
+            }
+            else
+            {
+                UnhoverTile();
+            }
         }
         else 
         {
             UnhoverTile();
         }
-
+        
         if (Input.GetMouseButtonDown(0))
         {
             if (_hoveredTile) 
@@ -53,10 +67,10 @@ public class PlayerInputManager : InputManager
                 SetTileSelection(_hoveredTile);
                 _hoveredTile = null;
             }
-            else if (_currentlySelected)
+            else if (_isPieceSelected)
             {
                 UnselectTile();
-                PieceManager.Instance.CurrentSelection = null;
+                PieceManager.Instance.UnselectPiece();
             }
         }
     }
@@ -66,10 +80,10 @@ public class PlayerInputManager : InputManager
         if (_hoveredTile != currentHoveredTile)
         {
             if (_hoveredTile)
-                _hoveredTile.SetHover(_currentlySelected, false);
+                _hoveredTile.SetHover(_isPieceSelected, false);
 
             _hoveredTile = currentHoveredTile;
-            _hoveredTile.SetHover(_currentlySelected, true);
+            _hoveredTile.SetHover(_isPieceSelected, true);
         }
     }
     
@@ -77,7 +91,7 @@ public class PlayerInputManager : InputManager
     {
         if (_hoveredTile)
         {
-            _hoveredTile.SetHover(_currentlySelected, false);
+            _hoveredTile.SetHover(_isPieceSelected, false);
             _hoveredTile = null;
         }
     }
