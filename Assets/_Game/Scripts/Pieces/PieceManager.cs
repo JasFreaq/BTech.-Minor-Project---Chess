@@ -54,7 +54,9 @@ public class PieceManager : MonoBehaviour
                     pieceRot = Quaternion.Euler(0, 180, 0);
 
                 ChessPiece piece = Instantiate(piecePrefab, piecePos, pieceRot, transform);
-                piece.GenerateValidMoves(new Vector2Int(startIndex.y, startIndex.x));
+                piece.CurrentIndex = new Vector2Int(startIndex.y, startIndex.x);
+                piece.GenerateValidMoves();
+
                 BoardManager.Instance.TileSet[startIndex.y, startIndex.x].HeldPiece = piece;
             }
         }
@@ -108,9 +110,11 @@ public class PieceManager : MonoBehaviour
     
     public void MoveSelectedPieceToTile(Vector2Int newTileIndex)
     {
+        _currentSelection.CurrentIndex = newTileIndex;
+        _currentSelection.GenerateValidMoves();
+
         Vector3 piecePos = new Vector3(newTileIndex.y, 0.001f, newTileIndex.x);
         _currentSelection.SetPosition(piecePos);
-        _currentSelection.GenerateValidMoves(newTileIndex);
         
         _currentSelection = null;
         BoardManager.Instance.ResetHighlightedTiles();

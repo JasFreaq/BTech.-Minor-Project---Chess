@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Pawn : ChessPiece
 {
-    public override void GenerateValidMoves(Vector2Int pieceIndex)
+    public override void GenerateValidMoves()
     {
         _validMoves.Clear();
 
@@ -21,16 +21,17 @@ public class Pawn : ChessPiece
             directionIncrement = -1;
         }
 
-        _validMoves.Add(new Vector2Int(pieceIndex.y, pieceIndex.x + directionIncrement));
-        if (pieceIndex.x == startIndex)
+        _validMoves.Add(new Vector2Int(_currentIndex.y, _currentIndex.x + directionIncrement));
+        if (_currentIndex.x == startIndex)
         {
-            _validMoves.Add(new Vector2Int(pieceIndex.y, pieceIndex.x + directionIncrement * 2));
+            _validMoves.Add(new Vector2Int(_currentIndex.y, _currentIndex.x + directionIncrement * 2));
         }
     }
 
     public override void GeneratePossibleMoves()
     {
-        _possibleMoves = new List<Vector2Int>();
+        _possibleMoves.Clear();
+
         foreach (Vector2Int validMove in _validMoves)
         {
             if (BoardManager.Instance.TileSet[validMove.y, validMove.x].HeldPiece)

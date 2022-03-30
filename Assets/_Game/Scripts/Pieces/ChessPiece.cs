@@ -8,6 +8,7 @@ public abstract class ChessPiece : MonoBehaviour
     [SerializeField] protected PieceData _pieceData;
     [SerializeField] private Vector2Int[] _startIndices;
 
+    protected Vector2Int _currentIndex;
     protected List<Vector2Int> _validMoves = new List<Vector2Int>();
     protected List<Vector2Int> _possibleMoves = new List<Vector2Int>();
 
@@ -20,6 +21,8 @@ public abstract class ChessPiece : MonoBehaviour
     public PieceData PieceData => _pieceData;
 
     public Vector2Int[] StartIndices => _startIndices;
+
+    public Vector2Int CurrentIndex { set => _currentIndex = value; }
 
     public List<Vector2Int> PossibleMoves => _possibleMoves;
 
@@ -35,7 +38,7 @@ public abstract class ChessPiece : MonoBehaviour
         UpdateScale();
     }
 
-    public abstract void GenerateValidMoves(Vector2Int pieceIndex);
+    public abstract void GenerateValidMoves();
 
     public abstract void GeneratePossibleMoves();
 
