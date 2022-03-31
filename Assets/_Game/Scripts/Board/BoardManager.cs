@@ -85,7 +85,7 @@ public class BoardManager : MonoBehaviour
     {
         foreach (Tile tile in _highlightedTiles)
         {
-            tile.Reset();
+            tile.ResetRepresentation();
         }
 
         _highlightedTiles.Clear();

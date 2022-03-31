@@ -38,10 +38,24 @@ public abstract class InputManager : MonoBehaviour
             SelectTile(tile);
         }
 
-        if (PieceManager.Instance.CurrentSelection)
+        if (PieceManager.Instance.CurrentSelection) 
         {
-            MoveSelectedPiece();
-            UnselectTile();
+            if (_currentSelectedTile.HeldPiece)
+            {
+                if (PieceManager.Instance.CurrentSelection.PieceData.PlayerType ==
+                    _currentSelectedTile.HeldPiece.PieceData.PlayerType)
+                {
+                    PieceManager.Instance.SelectPiece(_currentSelectedTile.HeldPiece, _currentSelectedTile.Index);
+                }
+                else
+                {
+                    MoveSelectedPiece();
+                }
+            }
+            else
+            {
+                MoveSelectedPiece();
+            }
         }
         else
         {
@@ -51,16 +65,18 @@ public abstract class InputManager : MonoBehaviour
 
     private void MoveSelectedPiece()
     {
-        if (_currentSelectedTile.HeldPiece)
-        {
-            PieceManager.Instance.CapturePiece(_currentSelectedTile.HeldPiece);
-        }
-
+        PieceBehaviour capturedPiece = _currentSelectedTile.HeldPiece;
         _previousSelectedTile.HeldPiece = null;
         _currentSelectedTile.HeldPiece = PieceManager.Instance.CurrentSelection;
 
         PieceManager.Instance.MoveSelectedPieceToTile(_currentSelectedTile.Index);
+        if (capturedPiece)
+        {
+            PieceManager.Instance.CapturePiece(capturedPiece);
+        }
+        
         BoardManager.Instance.ResetHighlightedTiles();
+        UnselectTile(true);
     }
 
     protected void SelectTile(Tile tile)
@@ -70,9 +86,12 @@ public abstract class InputManager : MonoBehaviour
         _isPieceSelected = true;
     }
 
-    protected void UnselectTile()
+    protected void UnselectTile(bool movedToTile = false)
     {
+        if (movedToTile) 
+            _currentSelectedTile.ResetStates();
         _currentSelectedTile.SetSelection(false);
+
         _currentSelectedTile = null;
         _isPieceSelected = false;
     }

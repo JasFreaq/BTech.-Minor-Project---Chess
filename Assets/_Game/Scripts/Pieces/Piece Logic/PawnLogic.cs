@@ -19,10 +19,16 @@ public class PawnLogic : PieceLogic
             directionIncrement = -1;
         }
 
-        validMoves.Add(new Vector2Int(currentIndex.y, currentIndex.x + directionIncrement));
-        if (currentIndex.x == startIndex)
+        Vector2Int index = new Vector2Int(currentIndex.x + directionIncrement, currentIndex.y);
+        if (index.x < 8)
         {
-            validMoves.Add(new Vector2Int(currentIndex.y, currentIndex.x + directionIncrement * 2));
+            validMoves.Add(new Vector2Int(index.y, index.x));
+
+            index.x += directionIncrement;
+            if (currentIndex.x == startIndex && index.x < 8)
+            {
+                validMoves.Add(new Vector2Int(index.y, index.x));
+            }
         }
     }
 
@@ -38,23 +44,26 @@ public class PawnLogic : PieceLogic
             possibleMoves.Add(validMove);
         }
 
-        if (validMoves[0].x > 0)
+        if (validMoves.Count > 0) 
         {
-            Vector2Int move = new Vector2Int(validMoves[0].x - 1, validMoves[0].y);
-            PieceBehaviour piece = BoardManager.Instance.TileSet[move.y, move.x].HeldPiece;
-            if (piece && piece.PieceData.PlayerType != playerType)
+            if (validMoves[0].x > 0)
             {
-                possibleMoves.Add(move);
+                Vector2Int move = new Vector2Int(validMoves[0].x - 1, validMoves[0].y);
+                PieceBehaviour piece = BoardManager.Instance.TileSet[move.y, move.x].HeldPiece;
+                if (piece && piece.PieceData.PlayerType != playerType)
+                {
+                    possibleMoves.Add(move);
+                }
             }
-        }
 
-        if (validMoves[0].x < 7)
-        {
-            Vector2Int move = new Vector2Int(validMoves[0].x + 1, validMoves[0].y);
-            PieceBehaviour piece = BoardManager.Instance.TileSet[move.y, move.x].HeldPiece;
-            if (piece && piece.PieceData.PlayerType != playerType)
+            if (validMoves[0].x < 7)
             {
-                possibleMoves.Add(move);
+                Vector2Int move = new Vector2Int(validMoves[0].x + 1, validMoves[0].y);
+                PieceBehaviour piece = BoardManager.Instance.TileSet[move.y, move.x].HeldPiece;
+                if (piece && piece.PieceData.PlayerType != playerType)
+                {
+                    possibleMoves.Add(move);
+                }
             }
         }
     }

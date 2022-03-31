@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _pieceData:
-    _playerType: 0
+    _playerType: 1
     _pieceType: 2
   _startIndices:
   - {x: 2, y: 7}

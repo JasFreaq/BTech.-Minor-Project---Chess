@@ -63,6 +63,11 @@ public class PieceManager : MonoBehaviour
 
     public void SelectPiece(PieceBehaviour selectedPiece, Vector2Int tileIndex)
     {
+        if (_currentSelection != null)
+        {
+            BoardManager.Instance.ResetHighlightedTiles();
+        }
+
         _currentSelection = selectedPiece;
         _currentSelection.SetPossibleMoves();
         BoardManager.Instance.HighlightPossibleMoves(_currentSelection.PossibleMoves);

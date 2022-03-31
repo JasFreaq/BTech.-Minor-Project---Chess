@@ -11,12 +11,8 @@ public class Tile : MonoBehaviour
     private BoxCollider _collider;
     private Image _image;
 
-    private bool _isSelected;
-
-    private Material _hoverMat;
-    private Material _selectMat;
-    private Material _validMat;
-    private Material _captureMat;
+    private bool _isSelected, _isValid, _isCapturable;
+    private Material _hoverMat, _selectMat, _validMat, _captureMat;
 
     public BoxCollider Collider => _collider;
 
@@ -40,9 +36,10 @@ public class Tile : MonoBehaviour
 
     public void SetHover(bool selectionMade, bool hovered)
     {
+        bool isMoveCandidate = _isSelected || _isValid || _isCapturable;
         if (hovered)
         {
-            if (!selectionMade)
+            if (!isMoveCandidate) 
             {
                 _image.material = _hoverMat;
                 _image.color = new Color(0, 0, 0, 1);
@@ -52,12 +49,13 @@ public class Tile : MonoBehaviour
         }
         else
         {
-            if (!selectionMade)
+            if (!isMoveCandidate) 
             {
-                Reset();
+                ResetRepresentation();
             }
 
-            _highlightBorder.SetActive(false);
+            if (!_isSelected)
+                _highlightBorder.SetActive(false);
         }
     }
     
@@ -71,12 +69,13 @@ public class Tile : MonoBehaviour
         }
         else
         {
-            Reset();
+            ResetRepresentation();
         }
     }
 
     public void SetValid(bool valid)
     {
+        _isValid = valid;
         if (valid)
         {
             _image.material = _validMat;
@@ -84,12 +83,13 @@ public class Tile : MonoBehaviour
         }
         else
         {
-            Reset();
+            ResetRepresentation();
         }
     }
 
     public void SetCapturable(bool capturable)
     {
+        _isCapturable = capturable;
         if (capturable)
         {
             _image.material = _captureMat;
@@ -97,13 +97,19 @@ public class Tile : MonoBehaviour
         }
         else
         {
-            Reset();
+            ResetRepresentation();
         }
     }
 
-    public void Reset()
+    public void ResetStates()
     {
         _isSelected = false;
+        _isValid = false;
+        _isCapturable = false;
+    }
+
+    public void ResetRepresentation()
+    {
         _image.color = new Color(0, 0, 0, 0);
         _highlightBorder.SetActive(false);
     }
