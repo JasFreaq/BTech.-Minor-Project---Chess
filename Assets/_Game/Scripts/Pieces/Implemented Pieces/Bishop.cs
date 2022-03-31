@@ -18,15 +18,6 @@ public class Bishop : ChessPiece
         _validMoves.Add(-Vector2Int.one);
 
         index = _currentIndex;
-        while (index.x > 0 && index.y < 7)
-        {
-            index.x--;
-            index.y++;
-            _validMoves.Add(new Vector2Int(index.y, index.x));
-        }
-        _validMoves.Add(-Vector2Int.one);
-
-        index = _currentIndex;
         while (index.x < 7 && index.y > 0)
         {
             index.x++;
@@ -35,6 +26,15 @@ public class Bishop : ChessPiece
         }
         _validMoves.Add(-Vector2Int.one);
 
+        index = _currentIndex;
+        while (index.x > 0 && index.y < 7)
+        {
+            index.x--;
+            index.y++;
+            _validMoves.Add(new Vector2Int(index.y, index.x));
+        }
+        _validMoves.Add(-Vector2Int.one);
+        
         index = _currentIndex;
         while (index.x < 7 && index.y < 7)
         {
@@ -47,7 +47,6 @@ public class Bishop : ChessPiece
     public override void GeneratePossibleMoves()
     {
         _possibleMoves.Clear();
-        //_possibleMoves = new List<Vector2Int>(_validMoves);
 
         bool foundPiece = false;
         int findCount = 0;
