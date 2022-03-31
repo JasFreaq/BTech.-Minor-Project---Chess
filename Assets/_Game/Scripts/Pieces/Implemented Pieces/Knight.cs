@@ -13,8 +13,8 @@ public class Knight : ChessPiece
         Vector2Int increment = new Vector2Int(2, 1);
         for (int i = 0; i < 4; i++)
         {
-            Vector2Int move = _currentIndex + increment;
-            candidateIndices.Add(move);
+            Vector2Int index = _currentIndex + increment;
+            candidateIndices.Add(index);
 
             increment.y *= -1;
             if (i % 2 != 0)
@@ -24,20 +24,20 @@ public class Knight : ChessPiece
         increment = new Vector2Int(1, 2);
         for (int i = 4; i < 8; i++)
         {
-            Vector2Int move = _currentIndex + increment;
-            candidateIndices.Add(move);
+            Vector2Int index = _currentIndex + increment;
+            candidateIndices.Add(index);
 
             increment.x *= -1;
             if (i % 2 != 0)
                 increment.y *= -1;
         }
 
-        foreach (Vector2Int indice in candidateIndices)
+        foreach (Vector2Int index in candidateIndices)
         {
-            if (indice.x >= 0 && indice.x < 8 &&
-                indice.y >= 0 && indice.y < 8)
+            if (index.x >= 0 && index.x < 8 &&
+                index.y >= 0 && index.y < 8)
             {
-                _validMoves.Add(new Vector2Int(indice.y, indice.x));
+                _validMoves.Add(new Vector2Int(index.y, index.x));
             }
         }
     }
