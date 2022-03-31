@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class PieceManager : MonoBehaviour
 {
-    [SerializeField] private ChessPiece[] _piecePrefabs = new ChessPiece[12];
+    [SerializeField] private PieceBehaviour[] _piecePrefabs = new PieceBehaviour[12];
 
     [Header("Capture Parameters")] 
     [SerializeField] private float _maxCaptureZoneSpace = 1f;
@@ -14,10 +14,10 @@ public class PieceManager : MonoBehaviour
     [SerializeField] private Transform _blackZoneRef;
     [SerializeField] private Vector3 _capturedPieceScale;
 
-    private ChessPiece _currentSelection;
+    private PieceBehaviour _currentSelection;
 
-    private List<ChessPiece> _capturedWhites = new List<ChessPiece>();
-    private List<ChessPiece> _capturedBlacks = new List<ChessPiece>();
+    private List<PieceBehaviour> _capturedWhites = new List<PieceBehaviour>();
+    private List<PieceBehaviour> _capturedBlacks = new List<PieceBehaviour>();
 
     #region Singleton Pattern
 
@@ -27,7 +27,7 @@ public class PieceManager : MonoBehaviour
 
     #endregion
 
-    public ChessPiece CurrentSelection
+    public PieceBehaviour CurrentSelection
     {
         get => _currentSelection;
     }
@@ -44,7 +44,7 @@ public class PieceManager : MonoBehaviour
 
     public void GeneratePieces()
     {
-        foreach (ChessPiece piecePrefab in _piecePrefabs)
+        foreach (PieceBehaviour piecePrefab in _piecePrefabs)
         {
             foreach (Vector2Int startIndex in piecePrefab.StartIndices)
             {
@@ -53,19 +53,18 @@ public class PieceManager : MonoBehaviour
                 if (piecePrefab.PieceData.PlayerType == PlayerType.Black)
                     pieceRot = Quaternion.Euler(0, 180, 0);
 
-                ChessPiece piece = Instantiate(piecePrefab, piecePos, pieceRot, transform);
+                PieceBehaviour piece = Instantiate(piecePrefab, piecePos, pieceRot, transform);
                 piece.CurrentIndex = new Vector2Int(startIndex.y, startIndex.x);
-                piece.GenerateValidMoves();
-
+                
                 BoardManager.Instance.TileSet[startIndex.y, startIndex.x].HeldPiece = piece;
             }
         }
     }
 
-    public void SelectPiece(ChessPiece selectedPiece, Vector2Int tileIndex)
+    public void SelectPiece(PieceBehaviour selectedPiece, Vector2Int tileIndex)
     {
         _currentSelection = selectedPiece;
-        _currentSelection.GeneratePossibleMoves();
+        _currentSelection.SetPossibleMoves();
         BoardManager.Instance.HighlightPossibleMoves(_currentSelection.PossibleMoves);
 
     }
@@ -76,11 +75,11 @@ public class PieceManager : MonoBehaviour
         BoardManager.Instance.ResetHighlightedTiles();
     }
 
-    public void CapturePiece(ChessPiece capturedPiece)
+    public void CapturePiece(PieceBehaviour capturedPiece)
     {
         float zMultiplier;
         Transform referenceTransform;
-        List<ChessPiece> capturedPieces;
+        List<PieceBehaviour> capturedPieces;
         if (capturedPiece.PieceData.PlayerType == PlayerType.White)
         {
             zMultiplier = 1f;
@@ -111,7 +110,7 @@ public class PieceManager : MonoBehaviour
     public void MoveSelectedPieceToTile(Vector2Int newTileIndex)
     {
         _currentSelection.CurrentIndex = newTileIndex;
-        _currentSelection.GenerateValidMoves();
+        _currentSelection.SetValidMoves();
 
         Vector3 piecePos = new Vector3(newTileIndex.y, 0.001f, newTileIndex.x);
         _currentSelection.SetPosition(piecePos);

@@ -22,7 +22,7 @@ public class Tile : MonoBehaviour
 
     public Vector2Int Index { get; set; }
 
-    public ChessPiece HeldPiece { get; set; }
+    public PieceBehaviour HeldPiece { get; set; }
 
     private void Awake()
     {

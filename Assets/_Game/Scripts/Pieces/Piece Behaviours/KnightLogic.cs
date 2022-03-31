@@ -2,18 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Knight : ChessPiece
+public class KnightLogic : PieceLogic
 {
-    public override void GenerateValidMoves()
+    public override void GenerateValidMoves(ref List<Vector2Int> validMoves, Vector2Int currentIndex, PlayerType playerType)
     {
-        _validMoves.Clear();
-
         List<Vector2Int> candidateIndices = new List<Vector2Int>(8);
-        
+
         Vector2Int increment = new Vector2Int(2, 1);
         for (int i = 0; i < 4; i++)
         {
-            Vector2Int index = _currentIndex + increment;
+            Vector2Int index = currentIndex + increment;
             candidateIndices.Add(index);
 
             increment.y *= -1;
@@ -24,7 +22,7 @@ public class Knight : ChessPiece
         increment = new Vector2Int(1, 2);
         for (int i = 4; i < 8; i++)
         {
-            Vector2Int index = _currentIndex + increment;
+            Vector2Int index = currentIndex + increment;
             candidateIndices.Add(index);
 
             increment.x *= -1;
@@ -37,28 +35,26 @@ public class Knight : ChessPiece
             if (index.x >= 0 && index.x < 8 &&
                 index.y >= 0 && index.y < 8)
             {
-                _validMoves.Add(new Vector2Int(index.y, index.x));
+                validMoves.Add(new Vector2Int(index.y, index.x));
             }
         }
     }
 
-    public override void GeneratePossibleMoves()
+    public override void GeneratePossibleMoves(ref List<Vector2Int> possibleMoves, ref List<Vector2Int> validMoves, PlayerType playerType)
     {
-        _possibleMoves.Clear();
-
-        foreach (Vector2Int validMove in _validMoves)
+        foreach (Vector2Int validMove in validMoves)
         {
-            ChessPiece piece = BoardManager.Instance.TileSet[validMove.y, validMove.x].HeldPiece;
+            PieceBehaviour piece = BoardManager.Instance.TileSet[validMove.y, validMove.x].HeldPiece;
             if (piece)
             {
-                if (piece.PieceData.PlayerType != _pieceData.PlayerType)
+                if (piece.PieceData.PlayerType != playerType)
                 {
-                    _possibleMoves.Add(validMove);
+                    possibleMoves.Add(validMove);
                 }
             }
             else
             {
-                _possibleMoves.Add(validMove);
+                possibleMoves.Add(validMove);
             }
         }
     }

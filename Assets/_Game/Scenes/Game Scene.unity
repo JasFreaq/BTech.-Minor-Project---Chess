@@ -613,18 +613,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _piecePrefabs:
-  - {fileID: -7703212677532860626, guid: 1eeb35487e553864580e30101ce1bdb6, type: 3}
-  - {fileID: -9043374791747501833, guid: abe7c0004193c364a91f262c8e13a1b1, type: 3}
-  - {fileID: -1484018063196900340, guid: b0b54bd51045cdc4da26ba72c8e75383, type: 3}
-  - {fileID: -8511884226535948086, guid: cd5c29b4042157e4a83cee55de856c9b, type: 3}
-  - {fileID: 2851622172273927991, guid: bf463eb8c1a0e3946b75f40f17650d7a, type: 3}
-  - {fileID: 2655804021952727824, guid: 9c64b50eb9be9a54bae467a70b224f2d, type: 3}
-  - {fileID: 641452436496099774, guid: a486008a5a6e5cb409374af5d349a304, type: 3}
-  - {fileID: 106057509948218795, guid: 9238c2c2ac3d5df4db70e9474832e7dd, type: 3}
-  - {fileID: 6954342741961081588, guid: eb245917804932447bb088e839b1ba6a, type: 3}
-  - {fileID: -7011605479597976379, guid: f5ef8b31ed9bda44b9e53df207d1861f, type: 3}
-  - {fileID: -3861700104652251272, guid: 4ccafb329d07a0d41ad28f02eb1e09e0, type: 3}
-  - {fileID: -7330166660911022084, guid: 23872284e87def34abca46d9e72741e9, type: 3}
+  - {fileID: -2270759196616980679, guid: 1eeb35487e553864580e30101ce1bdb6, type: 3}
+  - {fileID: -5618258456765298827, guid: abe7c0004193c364a91f262c8e13a1b1, type: 3}
+  - {fileID: -6364811374829255869, guid: b0b54bd51045cdc4da26ba72c8e75383, type: 3}
+  - {fileID: 2917361894209966119, guid: cd5c29b4042157e4a83cee55de856c9b, type: 3}
+  - {fileID: 599618441285626425, guid: bf463eb8c1a0e3946b75f40f17650d7a, type: 3}
+  - {fileID: 5393663255971134414, guid: 9c64b50eb9be9a54bae467a70b224f2d, type: 3}
+  - {fileID: 3500705956647688914, guid: a486008a5a6e5cb409374af5d349a304, type: 3}
+  - {fileID: -720040709565560857, guid: 9238c2c2ac3d5df4db70e9474832e7dd, type: 3}
+  - {fileID: 9004619910062550032, guid: eb245917804932447bb088e839b1ba6a, type: 3}
+  - {fileID: -8106707137041820140, guid: 4ccafb329d07a0d41ad28f02eb1e09e0, type: 3}
+  - {fileID: -292214528099407571, guid: f5ef8b31ed9bda44b9e53df207d1861f, type: 3}
+  - {fileID: 882538849181422585, guid: 23872284e87def34abca46d9e72741e9, type: 3}
   _maxCaptureZoneSpace: 1
   _captureZoneSize: 6
   _whiteZoneRef: {fileID: 692885156}

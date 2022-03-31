@@ -3,12 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class ChessPiece : MonoBehaviour
+public class PieceBehaviour : MonoBehaviour
 {
-    [SerializeField] protected PieceData _pieceData;
+    [SerializeField] private PieceData _pieceData;
     [SerializeField] private Vector2Int[] _startIndices;
 
-    protected Vector2Int _currentIndex;
+    private PieceLogic _pieceLogic;
+    private Vector2Int _currentIndex;
     protected List<Vector2Int> _validMoves = new List<Vector2Int>();
     protected List<Vector2Int> _possibleMoves = new List<Vector2Int>();
 
@@ -30,6 +31,9 @@ public abstract class ChessPiece : MonoBehaviour
     {
         _moveTime = SceneParamsHolder.Instance.PieceMoveTime;
         _scaleTime = SceneParamsHolder.Instance.PieceScaleTime;
+
+        _pieceLogic = GameplayManager.Instance.GetPieceLogic(_pieceData.PieceType);
+        SetValidMoves();
     }
 
     private void Update()
@@ -38,9 +42,17 @@ public abstract class ChessPiece : MonoBehaviour
         UpdateScale();
     }
 
-    public abstract void GenerateValidMoves();
+    public void SetValidMoves()
+    {
+        _validMoves.Clear();
+        _pieceLogic.GenerateValidMoves(ref _validMoves, _currentIndex, _pieceData.PlayerType);
+    }
 
-    public abstract void GeneratePossibleMoves();
+    public void SetPossibleMoves()
+    {
+        _possibleMoves.Clear();
+        _pieceLogic.GeneratePossibleMoves(ref _possibleMoves, ref _validMoves, _pieceData.PlayerType);
+    }
 
     private void UpdatePosition()
     {
