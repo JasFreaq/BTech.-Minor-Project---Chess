@@ -20,6 +20,8 @@ public class Tile : MonoBehaviour
 
     public PieceBehaviour HeldPiece { get; set; }
 
+    public bool Castling { get; set; }
+
     private void Awake()
     {
         _collider = GetComponent<BoxCollider>();

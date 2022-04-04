@@ -6,6 +6,9 @@ public class GameplayManager : MonoBehaviour
 {
     private Dictionary<PieceType, PieceLogic> _logicHandlers = new Dictionary<PieceType, PieceLogic>(6);
 
+    private List<Vector2Int> _whiteMoves = new List<Vector2Int>();
+    private List<Vector2Int> _blackMoves = new List<Vector2Int>();
+
     #region Singleton Pattern
 
     private static GameplayManager _instance;

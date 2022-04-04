@@ -57,7 +57,7 @@ public abstract class InputManager : MonoBehaviour
                 MoveSelectedPiece();
             }
         }
-        else
+        else if (_currentSelectedTile) 
         {
             PieceManager.Instance.SelectPiece(_currentSelectedTile.HeldPiece, _currentSelectedTile.Index);
         }
@@ -69,7 +69,13 @@ public abstract class InputManager : MonoBehaviour
         _previousSelectedTile.HeldPiece = null;
         _currentSelectedTile.HeldPiece = PieceManager.Instance.CurrentSelection;
 
-        PieceManager.Instance.MoveSelectedPieceToTile(_currentSelectedTile.Index);
+        if (PieceManager.Instance.CurrentSelection.PieceData.PieceType == PieceType.King
+            && _currentSelectedTile.Castling)
+        {
+            PieceManager.Instance.PerformCastling();
+        }
+        PieceManager.Instance.MoveSelectedPiece(_currentSelectedTile.Index);
+
         if (capturedPiece)
         {
             PieceManager.Instance.CapturePiece(capturedPiece);

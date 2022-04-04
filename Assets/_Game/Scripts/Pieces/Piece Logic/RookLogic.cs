@@ -9,37 +9,37 @@ public class RookLogic : MultidirectionalLogic
         _degreesOfMovement = 4;
     }
 
-    public override void GenerateValidMoves(ref List<Vector2Int> validMoves, Vector2Int currentIndex, PlayerType playerType)
+    public override void GenerateValidMoves(PieceBehaviour piece)
     {
-        Vector2Int index = currentIndex;
+        Vector2Int index = piece.CurrentIndex;
         while (index.x > 0)
         {
             index.x--;
-            validMoves.Add(new Vector2Int(index.y, index.x));
+            piece.ValidMoves.Add(new Vector2Int(index.y, index.x));
         }
-        validMoves.Add(-Vector2Int.one);
+        piece.ValidMoves.Add(-Vector2Int.one);
 
-        index = currentIndex;
+        index = piece.CurrentIndex;
         while (index.x < 7)
         {
             index.x++;
-            validMoves.Add(new Vector2Int(index.y, index.x));
+            piece.ValidMoves.Add(new Vector2Int(index.y, index.x));
         }
-        validMoves.Add(-Vector2Int.one);
+        piece.ValidMoves.Add(-Vector2Int.one);
 
-        index = currentIndex;
+        index = piece.CurrentIndex;
         while (index.y > 0)
         {
             index.y--;
-            validMoves.Add(new Vector2Int(index.y, index.x));
+            piece.ValidMoves.Add(new Vector2Int(index.y, index.x));
         }
-        validMoves.Add(-Vector2Int.one);
+        piece.ValidMoves.Add(-Vector2Int.one);
 
-        index = currentIndex;
+        index = piece.CurrentIndex;
         while (index.y < 7)
         {
             index.y++;
-            validMoves.Add(new Vector2Int(index.y, index.x));
+            piece.ValidMoves.Add(new Vector2Int(index.y, index.x));
         }
     }
 }

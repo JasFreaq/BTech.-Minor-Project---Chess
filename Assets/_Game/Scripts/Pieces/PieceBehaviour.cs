@@ -23,9 +23,13 @@ public class PieceBehaviour : MonoBehaviour
 
     public Vector2Int[] StartIndices => _startIndices;
 
-    public Vector2Int CurrentIndex { set => _currentIndex = value; }
+    public Vector2Int CurrentIndex { get; set; }
 
+    public List<Vector2Int> ValidMoves => _validMoves;
+    
     public List<Vector2Int> PossibleMoves => _possibleMoves;
+
+    public bool HasBeenMoved { get; set; }
 
     private void Start()
     {
@@ -34,6 +38,7 @@ public class PieceBehaviour : MonoBehaviour
 
         _pieceLogic = GameplayManager.Instance.GetPieceLogic(_pieceData.PieceType);
         SetValidMoves();
+        SetPossibleMoves();
     }
 
     private void Update()
@@ -45,13 +50,13 @@ public class PieceBehaviour : MonoBehaviour
     public void SetValidMoves()
     {
         _validMoves.Clear();
-        _pieceLogic.GenerateValidMoves(ref _validMoves, _currentIndex, _pieceData.PlayerType);
+        _pieceLogic.GenerateValidMoves(this);
     }
 
     public void SetPossibleMoves()
     {
         _possibleMoves.Clear();
-        _pieceLogic.GeneratePossibleMoves(ref _possibleMoves, ref _validMoves, _pieceData.PlayerType);
+        _pieceLogic.GeneratePossibleMoves(this);
     }
 
     private void UpdatePosition()
@@ -84,7 +89,7 @@ public class PieceBehaviour : MonoBehaviour
         }
     }
 
-    public virtual void SetPosition(Vector3 position, bool teleport = false)
+    public void SetPosition(Vector3 position, bool teleport = false)
     {
         _initialPosition = transform.position;
         _desiredPosition = position;
@@ -98,7 +103,7 @@ public class PieceBehaviour : MonoBehaviour
         }
     }
     
-    public virtual void SetScale(Vector3 scale, bool force = false)
+    public void SetScale(Vector3 scale, bool force = false)
     {
         _initialScale = transform.localScale;
         _desiredScale = scale;

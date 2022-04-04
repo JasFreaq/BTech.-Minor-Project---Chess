@@ -9,14 +9,14 @@ public class QueenLogic : MultidirectionalLogic
         _degreesOfMovement = 8;
     }
 
-    public override void GenerateValidMoves(ref List<Vector2Int> validMoves, Vector2Int currentIndex, PlayerType playerType)
+    public override void GenerateValidMoves(PieceBehaviour piece)
     {
         PieceLogic bishopLogic = GameplayManager.Instance.GetPieceLogic(PieceType.Bishop);
-        bishopLogic.GenerateValidMoves(ref validMoves, currentIndex, playerType);
+        bishopLogic.GenerateValidMoves(piece);
 
-        validMoves.Add(-Vector2Int.one);
+        piece.ValidMoves.Add(-Vector2Int.one);
 
         PieceLogic rookLogic = GameplayManager.Instance.GetPieceLogic(PieceType.Rook);
-        rookLogic.GenerateValidMoves(ref validMoves, currentIndex, playerType);
+        rookLogic.GenerateValidMoves(piece);
     }
 }

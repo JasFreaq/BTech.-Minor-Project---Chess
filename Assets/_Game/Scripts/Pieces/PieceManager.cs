@@ -16,6 +16,9 @@ public class PieceManager : MonoBehaviour
 
     private PieceBehaviour _currentSelection;
 
+    private List<PieceBehaviour> _playingWhites = new List<PieceBehaviour>();
+    private List<PieceBehaviour> _playingBlacks = new List<PieceBehaviour>();
+    
     private List<PieceBehaviour> _capturedWhites = new List<PieceBehaviour>();
     private List<PieceBehaviour> _capturedBlacks = new List<PieceBehaviour>();
 
@@ -27,10 +30,7 @@ public class PieceManager : MonoBehaviour
 
     #endregion
 
-    public PieceBehaviour CurrentSelection
-    {
-        get => _currentSelection;
-    }
+    public PieceBehaviour CurrentSelection => _currentSelection;
 
     private void Awake()
     {
@@ -57,6 +57,15 @@ public class PieceManager : MonoBehaviour
                 piece.CurrentIndex = new Vector2Int(startIndex.y, startIndex.x);
                 
                 BoardManager.Instance.TileSet[startIndex.y, startIndex.x].HeldPiece = piece;
+
+                if (piece.PieceData.PlayerType == PlayerType.White)
+                {
+                    _playingWhites.Add(piece);
+                }
+                else
+                {
+                    _playingBlacks.Add(piece);
+                }
             }
         }
     }
@@ -69,7 +78,6 @@ public class PieceManager : MonoBehaviour
         }
 
         _currentSelection = selectedPiece;
-        _currentSelection.SetPossibleMoves();
         BoardManager.Instance.HighlightPossibleMoves(_currentSelection.PossibleMoves);
 
     }
@@ -88,6 +96,7 @@ public class PieceManager : MonoBehaviour
         if (capturedPiece.PieceData.PlayerType == PlayerType.White)
         {
             zMultiplier = 1f;
+            _playingWhites.Remove(capturedPiece);
             _capturedWhites.Add(capturedPiece);
             capturedPieces = _capturedWhites;
             referenceTransform = _whiteZoneRef;
@@ -95,6 +104,7 @@ public class PieceManager : MonoBehaviour
         else
         {
             zMultiplier = -1f;
+            _playingWhites.Remove(capturedPiece);
             _capturedBlacks.Add(capturedPiece);
             capturedPieces = _capturedBlacks;
             referenceTransform = _blackZoneRef;
@@ -112,15 +122,50 @@ public class PieceManager : MonoBehaviour
         capturedPiece.SetScale(_capturedPieceScale);
     }
     
-    public void MoveSelectedPieceToTile(Vector2Int newTileIndex)
+    public void MoveSelectedPiece(Vector2Int newTileIndex)
     {
+        if (!_currentSelection.HasBeenMoved)
+        {
+            _currentSelection.HasBeenMoved = true;
+        }
+
         _currentSelection.CurrentIndex = newTileIndex;
         _currentSelection.SetValidMoves();
 
         Vector3 piecePos = new Vector3(newTileIndex.y, 0.001f, newTileIndex.x);
         _currentSelection.SetPosition(piecePos);
-        
         _currentSelection = null;
+
         BoardManager.Instance.ResetHighlightedTiles();
+        SetPossibleMoves();
+    }
+    
+    private void SetPossibleMoves()
+    {
+        foreach (PieceBehaviour piece in _playingWhites)
+        {
+            piece.SetPossibleMoves();
+        }
+
+        foreach (PieceBehaviour piece in _playingBlacks)
+        {
+            piece.SetPossibleMoves();
+        }
+    }
+
+    public void PerformCastling()
+    {
+        Vector2Int rookIndex = _currentSelection.CurrentIndex + new Vector2Int(0, 3);
+        Tile rookTile = BoardManager.Instance.TileSet[rookIndex.x, rookIndex.y];
+        PieceBehaviour rookPiece = rookTile.HeldPiece;
+        rookTile.HeldPiece = null;
+
+        Vector2Int rookMoveIndex = _currentSelection.CurrentIndex + new Vector2Int(0, 1);
+        Tile rookMoveTile = BoardManager.Instance.TileSet[rookMoveIndex.x, rookMoveIndex.y];
+        rookMoveTile.HeldPiece = rookPiece;
+        
+        Vector3 rookMovePos = new Vector3(rookMoveTile.Index.y, 0.001f, rookMoveTile.Index.x);
+        rookPiece.SetPosition(rookMovePos);
+        rookPiece.HasBeenMoved = true;
     }
 }

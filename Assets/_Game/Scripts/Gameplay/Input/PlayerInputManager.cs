@@ -31,7 +31,7 @@ public class PlayerInputManager : InputManager
             {
                 List<Vector2Int> possibleMoves = PieceManager.Instance.CurrentSelection.PossibleMoves;
                 Vector2Int tileIndex = new Vector2Int(currentHoveredTile.Index.y, currentHoveredTile.Index.x);
-                
+
                 foreach (Vector2Int possibleMove in possibleMoves)
                 {
                     if (tileIndex == possibleMove)

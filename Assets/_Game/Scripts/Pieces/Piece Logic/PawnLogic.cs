@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class PawnLogic : PieceLogic
 {
-    public override void GenerateValidMoves(ref List<Vector2Int> validMoves, Vector2Int currentIndex, PlayerType playerType)
+    public override void GenerateValidMoves(PieceBehaviour piece)
     {
         int startIndex;
         int directionIncrement;
-        if (playerType == PlayerType.White)
+        if (piece.PieceData.PlayerType == PlayerType.White)
         {
             startIndex = 1;
             directionIncrement = 1;
@@ -19,50 +19,51 @@ public class PawnLogic : PieceLogic
             directionIncrement = -1;
         }
 
-        Vector2Int index = new Vector2Int(currentIndex.x + directionIncrement, currentIndex.y);
+        Vector2Int index = new Vector2Int(piece.CurrentIndex.x + directionIncrement, piece.CurrentIndex.y);
         if (index.x < 8)
         {
-            validMoves.Add(new Vector2Int(index.y, index.x));
+            piece.ValidMoves.Add(new Vector2Int(index.y, index.x));
 
             index.x += directionIncrement;
-            if (currentIndex.x == startIndex && index.x < 8)
+            if (piece.CurrentIndex.x == startIndex && index.x < 8)
             {
-                validMoves.Add(new Vector2Int(index.y, index.x));
+                piece.ValidMoves.Add(new Vector2Int(index.y, index.x));
             }
         }
     }
 
-    public override void GeneratePossibleMoves(ref List<Vector2Int> possibleMoves, ref List<Vector2Int> validMoves, PlayerType playerType)
+    public override void GeneratePossibleMoves(PieceBehaviour piece)
     {
-        foreach (Vector2Int validMove in validMoves)
+        foreach (Vector2Int validMove in piece.ValidMoves)
         {
             if (BoardManager.Instance.TileSet[validMove.y, validMove.x].HeldPiece)
             {
                 break;
             }
 
-            possibleMoves.Add(validMove);
+            piece.PossibleMoves.Add(validMove);
         }
 
-        if (validMoves.Count > 0) 
+        if (piece.ValidMoves.Count > 0)
         {
-            if (validMoves[0].x > 0)
+            Vector2Int firstMove = piece.ValidMoves[0];
+            if (firstMove.x > 0)
             {
-                Vector2Int move = new Vector2Int(validMoves[0].x - 1, validMoves[0].y);
-                PieceBehaviour piece = BoardManager.Instance.TileSet[move.y, move.x].HeldPiece;
-                if (piece && piece.PieceData.PlayerType != playerType)
+                Vector2Int move = new Vector2Int(firstMove.x - 1, firstMove.y);
+                PieceBehaviour heldPiece = BoardManager.Instance.TileSet[move.y, move.x].HeldPiece;
+                if (heldPiece && heldPiece.PieceData.PlayerType != piece.PieceData.PlayerType)
                 {
-                    possibleMoves.Add(move);
+                    piece.PossibleMoves.Add(move);
                 }
             }
 
-            if (validMoves[0].x < 7)
+            if (firstMove.x < 7)
             {
-                Vector2Int move = new Vector2Int(validMoves[0].x + 1, validMoves[0].y);
-                PieceBehaviour piece = BoardManager.Instance.TileSet[move.y, move.x].HeldPiece;
-                if (piece && piece.PieceData.PlayerType != playerType)
+                Vector2Int move = new Vector2Int(firstMove.x + 1, firstMove.y);
+                PieceBehaviour heldPiece = BoardManager.Instance.TileSet[move.y, move.x].HeldPiece;
+                if (heldPiece && heldPiece.PieceData.PlayerType != piece.PieceData.PlayerType)
                 {
-                    possibleMoves.Add(move);
+                    piece.PossibleMoves.Add(move);
                 }
             }
         }

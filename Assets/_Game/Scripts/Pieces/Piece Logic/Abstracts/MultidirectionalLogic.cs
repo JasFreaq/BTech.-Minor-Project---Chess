@@ -6,11 +6,11 @@ public abstract class MultidirectionalLogic : PieceLogic
 {
     protected int _degreesOfMovement;
 
-    public override void GeneratePossibleMoves(ref List<Vector2Int> possibleMoves, ref List<Vector2Int> validMoves, PlayerType playerType)
+    public override void GeneratePossibleMoves(PieceBehaviour piece)
     {
         bool foundPiece = false;
         int findCount = 0;
-        foreach (Vector2Int validMove in validMoves)
+        foreach (Vector2Int validMove in piece.ValidMoves)
         {
             if (validMove == -Vector2Int.one)
             {
@@ -20,12 +20,12 @@ public abstract class MultidirectionalLogic : PieceLogic
 
             if (!foundPiece)
             {
-                PieceBehaviour piece = BoardManager.Instance.TileSet[validMove.y, validMove.x].HeldPiece;
-                if (piece)
+                PieceBehaviour heldPiece = BoardManager.Instance.TileSet[validMove.y, validMove.x].HeldPiece;
+                if (heldPiece)
                 {
-                    if (piece.PieceData.PlayerType != playerType)
+                    if (heldPiece.PieceData.PlayerType != piece.PieceData.PlayerType)
                     {
-                        possibleMoves.Add(validMove);
+                        piece.PossibleMoves.Add(validMove);
                     }
 
                     foundPiece = true;
@@ -38,7 +38,7 @@ public abstract class MultidirectionalLogic : PieceLogic
                 }
                 else
                 {
-                    possibleMoves.Add(validMove);
+                    piece.PossibleMoves.Add(validMove);
                 }
             }
         }
