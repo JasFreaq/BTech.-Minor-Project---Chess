@@ -65,15 +65,36 @@ public abstract class InputManager : MonoBehaviour
 
     private void MoveSelectedPiece()
     {
-        PieceBehaviour capturedPiece = _currentSelectedTile.HeldPiece;
+        PieceBehaviour capturedPiece;
+        if (_currentSelectedTile.EnPassant &&
+            PieceManager.Instance.CurrentSelection.PieceData.PieceType == PieceType.Pawn)
+        {
+            int direction;
+            if (PieceManager.Instance.CurrentSelection.PieceData.PlayerType == PlayerType.White)
+            {
+                direction = -1;
+            }
+            else
+            {
+                direction = 1;
+            }
+
+            Vector2Int enPassantCaptureIndex = _currentSelectedTile.Index + new Vector2Int(direction, 0);
+            Tile enPassantCaptureTile = BoardManager.Instance.TileSet[enPassantCaptureIndex.x, enPassantCaptureIndex.y];
+            capturedPiece = enPassantCaptureTile.HeldPiece;
+            enPassantCaptureTile.HeldPiece = null;
+            print(enPassantCaptureTile);
+        }
+        else
+        {
+            capturedPiece = _currentSelectedTile.HeldPiece;
+        }
+
         _previousSelectedTile.HeldPiece = null;
         _currentSelectedTile.HeldPiece = PieceManager.Instance.CurrentSelection;
 
-        if (PieceManager.Instance.CurrentSelection.PieceData.PieceType == PieceType.King
-            && _currentSelectedTile.Castling)
-        {
-            PieceManager.Instance.PerformCastling();
-        }
+        ProcessSpecialMoves();
+
         PieceManager.Instance.MoveSelectedPiece(_currentSelectedTile.Index);
 
         if (capturedPiece)
@@ -83,6 +104,26 @@ public abstract class InputManager : MonoBehaviour
         
         BoardManager.Instance.ResetHighlightedTiles();
         UnselectTile(true);
+    }
+
+    private void ProcessSpecialMoves()
+    {
+        switch (PieceManager.Instance.CurrentSelection.PieceData.PieceType)
+        {
+            case PieceType.Pawn:
+                Vector2Int previousIndex = _previousSelectedTile.Index;
+                Vector2Int currentIndex = _currentSelectedTile.Index;
+                if (Mathf.Abs(previousIndex.x - currentIndex.x) == 2)
+                {
+                    GameplayManager.Instance.EnableEnPassant(currentIndex);
+                }
+                break;
+
+            case PieceType.King:
+                if (_currentSelectedTile.Castling)
+                    GameplayManager.Instance.PerformCastling();
+                break;
+        }
     }
 
     protected void SelectTile(Tile tile)

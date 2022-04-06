@@ -38,4 +38,40 @@ public class GameplayManager : MonoBehaviour
     {
         return _logicHandlers[pieceType];
     }
+
+    public void PerformCastling()
+    {
+        Vector2Int currentIndex = PieceManager.Instance.CurrentSelection.CurrentIndex;
+        Vector2Int rookIndex = currentIndex + new Vector2Int(0, 3);
+        Tile rookTile = BoardManager.Instance.TileSet[rookIndex.x, rookIndex.y];
+        PieceBehaviour rookPiece = rookTile.HeldPiece;
+        rookTile.HeldPiece = null;
+
+        Vector2Int rookMoveIndex = currentIndex + new Vector2Int(0, 1);
+        Tile rookMoveTile = BoardManager.Instance.TileSet[rookMoveIndex.x, rookMoveIndex.y];
+        rookMoveTile.HeldPiece = rookPiece;
+
+        Vector3 rookMovePos = new Vector3(rookMoveTile.Index.y, 0.001f, rookMoveTile.Index.x);
+        rookPiece.SetPosition(rookMovePos);
+        rookPiece.HasBeenMoved = true;
+
+        print(rookPiece);
+    }
+    
+    public void EnableEnPassant(Vector2Int currentIndex)
+    {
+        int direction;
+        if (PieceManager.Instance.CurrentSelection.PieceData.PlayerType == PlayerType.White)
+        {
+            direction = -1;
+        }
+        else
+        {
+            direction = 1;
+        }
+
+        Vector2Int move = currentIndex + new Vector2Int(direction, 0);
+        Tile tile = BoardManager.Instance.TileSet[move.x, move.y];
+        tile.EnPassant = true;
+    }
 }

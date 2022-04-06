@@ -1,30 +1,31 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.PlayerLoop;
 
 public class PawnLogic : PieceLogic
 {
     public override void GenerateValidMoves(PieceBehaviour piece)
     {
         int startIndex;
-        int directionIncrement;
+        int direction;
         if (piece.PieceData.PlayerType == PlayerType.White)
         {
             startIndex = 1;
-            directionIncrement = 1;
+            direction = 1;
         }
         else
         {
             startIndex = 6;
-            directionIncrement = -1;
+            direction = -1;
         }
 
-        Vector2Int index = new Vector2Int(piece.CurrentIndex.x + directionIncrement, piece.CurrentIndex.y);
+        Vector2Int index = new Vector2Int(piece.CurrentIndex.x + direction, piece.CurrentIndex.y);
         if (index.x < 8)
         {
             piece.ValidMoves.Add(new Vector2Int(index.y, index.x));
 
-            index.x += directionIncrement;
+            index.x += direction;
             if (piece.CurrentIndex.x == startIndex && index.x < 8)
             {
                 piece.ValidMoves.Add(new Vector2Int(index.y, index.x));
@@ -46,12 +47,24 @@ public class PawnLogic : PieceLogic
 
         if (piece.ValidMoves.Count > 0)
         {
+            int enPassantRow;
+            if (piece.PieceData.PlayerType == PlayerType.White)
+            {
+                enPassantRow = 5;
+            }
+            else
+            {
+                enPassantRow = 2;
+            }
+
             Vector2Int firstMove = piece.ValidMoves[0];
             if (firstMove.x > 0)
             {
-                Vector2Int move = new Vector2Int(firstMove.x - 1, firstMove.y);
-                PieceBehaviour heldPiece = BoardManager.Instance.TileSet[move.y, move.x].HeldPiece;
-                if (heldPiece && heldPiece.PieceData.PlayerType != piece.PieceData.PlayerType)
+                Vector2Int move = firstMove + new Vector2Int(-1, 0);
+                Tile tile = BoardManager.Instance.TileSet[move.y, move.x];
+                PieceBehaviour heldPiece = tile.HeldPiece;
+                if ((heldPiece && heldPiece.PieceData.PlayerType != piece.PieceData.PlayerType)
+                    || (firstMove.y == enPassantRow && tile.EnPassant)) 
                 {
                     piece.PossibleMoves.Add(move);
                 }
@@ -59,9 +72,11 @@ public class PawnLogic : PieceLogic
 
             if (firstMove.x < 7)
             {
-                Vector2Int move = new Vector2Int(firstMove.x + 1, firstMove.y);
-                PieceBehaviour heldPiece = BoardManager.Instance.TileSet[move.y, move.x].HeldPiece;
-                if (heldPiece && heldPiece.PieceData.PlayerType != piece.PieceData.PlayerType)
+                Vector2Int move = firstMove + new Vector2Int(1, 0);
+                Tile tile = BoardManager.Instance.TileSet[move.y, move.x];
+                PieceBehaviour heldPiece = tile.HeldPiece;
+                if ((heldPiece && heldPiece.PieceData.PlayerType != piece.PieceData.PlayerType)
+                    || (firstMove.y == enPassantRow && tile.EnPassant)) 
                 {
                     piece.PossibleMoves.Add(move);
                 }

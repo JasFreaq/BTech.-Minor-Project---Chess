@@ -10,7 +10,7 @@ public class PlayerInputManager : InputManager
 
     private Camera _mainCamera;
 
-    private PlayerType _playerTeam;
+    //private PlayerType _playerTeam;
 
     private Tile _hoveredTile;
 
@@ -47,7 +47,7 @@ public class PlayerInputManager : InputManager
             }
             
             if (currentHoveredTile.HeldPiece
-                && currentHoveredTile.HeldPiece.PieceData.PlayerType == _playerTeam)
+                /*&& currentHoveredTile.HeldPiece.PieceData.PlayerType == _playerTeam*/)
             {
                 HoverTile(currentHoveredTile);
             }

@@ -63,18 +63,19 @@ public class BoardManager : MonoBehaviour
         }
     }
 
-    public void HighlightPossibleMoves(List<Vector2Int> possibleMoves)
+    public void HighlightPossibleMoves(PieceBehaviour selectedPiece)
     {
-        foreach (Vector2Int possibleMove in possibleMoves)
+        foreach (Vector2Int possibleMove in selectedPiece.PossibleMoves)
         {
             Tile tile = _tileSet[possibleMove.y, possibleMove.x];
-            if (tile.HeldPiece == null)
+            if (tile.HeldPiece != null ||
+                tile.EnPassant && selectedPiece.PieceData.PieceType == PieceType.Pawn) 
             {
-                tile.SetValid(true);
+                tile.SetCapturable(true);
             }
             else
             {
-                tile.SetCapturable(true);
+                tile.SetValid(true);
             }
 
             _highlightedTiles.Add(tile);

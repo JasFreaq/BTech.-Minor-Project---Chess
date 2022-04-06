@@ -9,7 +9,6 @@ public class PieceBehaviour : MonoBehaviour
     [SerializeField] private Vector2Int[] _startIndices;
 
     private PieceLogic _pieceLogic;
-    private Vector2Int _currentIndex;
     protected List<Vector2Int> _validMoves = new List<Vector2Int>();
     protected List<Vector2Int> _possibleMoves = new List<Vector2Int>();
 

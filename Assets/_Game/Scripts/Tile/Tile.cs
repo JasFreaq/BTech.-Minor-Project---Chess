@@ -21,6 +21,8 @@ public class Tile : MonoBehaviour
     public PieceBehaviour HeldPiece { get; set; }
 
     public bool Castling { get; set; }
+    
+    public bool EnPassant { get; set; }
 
     private void Awake()
     {

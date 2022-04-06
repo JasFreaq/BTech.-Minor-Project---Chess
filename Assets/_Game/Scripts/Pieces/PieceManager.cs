@@ -78,8 +78,7 @@ public class PieceManager : MonoBehaviour
         }
 
         _currentSelection = selectedPiece;
-        BoardManager.Instance.HighlightPossibleMoves(_currentSelection.PossibleMoves);
-
+        BoardManager.Instance.HighlightPossibleMoves(_currentSelection);
     }
 
     public void UnselectPiece()
