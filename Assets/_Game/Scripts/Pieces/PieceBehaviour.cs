@@ -12,11 +12,7 @@ public class PieceBehaviour : MonoBehaviour
     protected List<Vector2Int> _validMoves = new List<Vector2Int>();
     protected List<Vector2Int> _possibleMoves = new List<Vector2Int>();
 
-    private Vector3 _initialPosition, _initialScale;
-    private Vector3 _desiredPosition, _desiredScale;
     private float _moveTime, _scaleTime;
-    private float _moveStartTime, _scaleStartTime;
-    private bool _currentlyMoving, _currentlyScaling;
 
     public PieceData PieceData => _pieceData;
 
@@ -39,13 +35,7 @@ public class PieceBehaviour : MonoBehaviour
         SetValidMoves();
         SetPossibleMoves();
     }
-
-    private void Update()
-    {
-        UpdatePosition();
-        UpdateScale();
-    }
-
+    
     public void SetValidMoves()
     {
         _validMoves.Clear();
@@ -57,62 +47,64 @@ public class PieceBehaviour : MonoBehaviour
         _possibleMoves.Clear();
         _pieceLogic.GeneratePossibleMoves(this);
     }
-
-    private void UpdatePosition()
-    {
-        if (_currentlyMoving)
-        {
-            float t = (Time.time - _moveStartTime) / _moveTime;
-            transform.position = Vector3.Lerp(_initialPosition, _desiredPosition, t);
-
-            if (Vector3.Distance(transform.position, _desiredPosition) < Mathf.Epsilon)
-            {
-                transform.position = _desiredPosition;
-                _currentlyMoving = false;
-            }
-        }
-    }
     
-    private void UpdateScale()
+    public IEnumerator SetPositionRoutine(Vector3 position, bool teleport = false)
     {
-        if (_currentlyScaling)
-        {
-            float t = (Time.time - _scaleStartTime) / _scaleTime;
-            transform.localScale = Vector3.Lerp(_initialScale, _desiredScale, t);
-
-            if ((transform.localScale - _desiredScale).magnitude < Mathf.Epsilon)
-            {
-                transform.localScale = _desiredScale;
-                _currentlyScaling = false;
-            }
-        }
-    }
-
-    public void SetPosition(Vector3 position, bool teleport = false)
-    {
-        _initialPosition = transform.position;
-        _desiredPosition = position;
-        _moveStartTime = Time.time;
-        _currentlyMoving = true;
-
+        Vector3 desiredPosition = position;
+        
         if (teleport)
         {
-            transform.position = _desiredPosition;
-            _currentlyMoving = false;
+            transform.position = desiredPosition;
+        }
+        else
+        {
+            Vector3 initialPosition = transform.position;
+            float moveStartTime = Time.time;
+            bool currentlyMoving = true;
+
+            while (currentlyMoving)
+            {
+                float t = (Time.time - moveStartTime) / _moveTime;
+                transform.position = Vector3.Lerp(initialPosition, desiredPosition, t);
+
+                yield return new WaitForEndOfFrame();
+
+                if (Vector3.Distance(transform.position, desiredPosition) < Mathf.Epsilon)
+                {
+                    transform.position = desiredPosition;
+                    currentlyMoving = false;
+                }
+            }
         }
     }
     
-    public void SetScale(Vector3 scale, bool force = false)
+    public IEnumerator SetScaleRoutine(Vector3 scale, bool force = false)
     {
-        _initialScale = transform.localScale;
-        _desiredScale = scale;
-        _scaleStartTime = Time.time;
-        _currentlyScaling = true;
+        Vector3 desiredScale = scale;
 
         if (force)
         {
-            transform.localScale = _desiredScale;
-            _currentlyScaling = false;
+            transform.localScale = desiredScale;
+        }
+        else
+        {
+            Vector3 initialScale = transform.localScale;
+            float scaleStartTime = Time.time;
+            bool currentlyScaling = true;
+
+            while (currentlyScaling)
+            {
+                float t = (Time.time - scaleStartTime) / _scaleTime;
+                transform.localScale = Vector3.Lerp(initialScale, desiredScale, t);
+
+                yield return new WaitForEndOfFrame();
+
+                if ((transform.localScale - desiredScale).magnitude < Mathf.Epsilon)
+                {
+                    transform.localScale = desiredScale;
+                    currentlyScaling = false;
+                }
+            }
         }
     }
 }

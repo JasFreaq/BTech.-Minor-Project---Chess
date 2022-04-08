@@ -5,6 +5,8 @@ using UnityEngine;
 
 public abstract class InputManager : MonoBehaviour
 {
+    [SerializeField] protected PlayerType _playerTeam;
+
     protected Tile _currentSelectedTile;
     protected Tile _previousSelectedTile;
 
@@ -83,7 +85,7 @@ public abstract class InputManager : MonoBehaviour
             Tile enPassantCaptureTile = BoardManager.Instance.TileSet[enPassantCaptureIndex.x, enPassantCaptureIndex.y];
             capturedPiece = enPassantCaptureTile.HeldPiece;
             enPassantCaptureTile.HeldPiece = null;
-            print(enPassantCaptureTile);
+
         }
         else
         {
@@ -94,8 +96,7 @@ public abstract class InputManager : MonoBehaviour
         _currentSelectedTile.HeldPiece = PieceManager.Instance.CurrentSelection;
 
         ProcessSpecialMoves();
-
-        PieceManager.Instance.MoveSelectedPiece(_currentSelectedTile.Index);
+        GameplayManager.Instance.MoveSelectedPiece(_currentSelectedTile.Index);
 
         if (capturedPiece)
         {
@@ -133,7 +134,7 @@ public abstract class InputManager : MonoBehaviour
         _isPieceSelected = true;
     }
 
-    protected void UnselectTile(bool movedToTile = false)
+    public virtual void UnselectTile(bool movedToTile = false)
     {
         if (movedToTile) 
             _currentSelectedTile.ResetStates();

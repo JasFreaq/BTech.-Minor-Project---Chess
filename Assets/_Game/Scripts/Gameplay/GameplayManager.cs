@@ -39,23 +39,45 @@ public class GameplayManager : MonoBehaviour
         return _logicHandlers[pieceType];
     }
 
+    public void MoveSelectedPiece(Vector2Int newTileIndex)
+    {
+        StartCoroutine(MoveSelectedPieceRoutine(newTileIndex));
+    }
+
+    private IEnumerator MoveSelectedPieceRoutine(Vector2Int newTileIndex)
+    {
+        PieceBehaviour currentSelection = PieceManager.Instance.CurrentSelection;
+        if (!currentSelection.HasBeenMoved)
+        {
+            currentSelection.HasBeenMoved = true;
+        }
+
+        currentSelection.CurrentIndex = newTileIndex;
+        currentSelection.SetValidMoves();
+
+        Vector3 piecePos = new Vector3(newTileIndex.y, 0.001f, newTileIndex.x);
+        yield return currentSelection.SetPositionRoutine(piecePos);
+
+        BoardManager.Instance.ResetHighlightedTiles();
+        PieceManager.Instance.MovedSelectedPiece();
+        TurnManager.Instance.EndTurn();
+    }
+
     public void PerformCastling()
     {
         Vector2Int currentIndex = PieceManager.Instance.CurrentSelection.CurrentIndex;
         Vector2Int rookIndex = currentIndex + new Vector2Int(0, 3);
-        Tile rookTile = BoardManager.Instance.TileSet[rookIndex.x, rookIndex.y];
+        Tile rookTile = BoardManager.Instance.TileSet[rookIndex.y, rookIndex.x];
         PieceBehaviour rookPiece = rookTile.HeldPiece;
         rookTile.HeldPiece = null;
 
         Vector2Int rookMoveIndex = currentIndex + new Vector2Int(0, 1);
-        Tile rookMoveTile = BoardManager.Instance.TileSet[rookMoveIndex.x, rookMoveIndex.y];
+        Tile rookMoveTile = BoardManager.Instance.TileSet[rookMoveIndex.y, rookMoveIndex.x];
         rookMoveTile.HeldPiece = rookPiece;
 
         Vector3 rookMovePos = new Vector3(rookMoveTile.Index.y, 0.001f, rookMoveTile.Index.x);
-        rookPiece.SetPosition(rookMovePos);
+        StartCoroutine(rookPiece.SetPositionRoutine(rookMovePos));
         rookPiece.HasBeenMoved = true;
-
-        print(rookPiece);
     }
     
     public void EnableEnPassant(Vector2Int currentIndex)

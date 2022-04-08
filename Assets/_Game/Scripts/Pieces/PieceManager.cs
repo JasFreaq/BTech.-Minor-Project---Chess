@@ -115,27 +115,15 @@ public class PieceManager : MonoBehaviour
         {
             Vector3 pos = referenceTransform.position;
             pos.z += i * zIncrement * zMultiplier;
-            capturedPieces[i].SetPosition(pos);
+            StartCoroutine(capturedPieces[i].SetPositionRoutine(pos));
         }
 
-        capturedPiece.SetScale(_capturedPieceScale);
+        StartCoroutine(capturedPiece.SetScaleRoutine(_capturedPieceScale));
     }
     
-    public void MoveSelectedPiece(Vector2Int newTileIndex)
+    public void MovedSelectedPiece()
     {
-        if (!_currentSelection.HasBeenMoved)
-        {
-            _currentSelection.HasBeenMoved = true;
-        }
-
-        _currentSelection.CurrentIndex = newTileIndex;
-        _currentSelection.SetValidMoves();
-
-        Vector3 piecePos = new Vector3(newTileIndex.y, 0.001f, newTileIndex.x);
-        _currentSelection.SetPosition(piecePos);
         _currentSelection = null;
-
-        BoardManager.Instance.ResetHighlightedTiles();
         SetPossibleMoves();
     }
     
@@ -150,21 +138,5 @@ public class PieceManager : MonoBehaviour
         {
             piece.SetPossibleMoves();
         }
-    }
-
-    public void PerformCastling()
-    {
-        Vector2Int rookIndex = _currentSelection.CurrentIndex + new Vector2Int(0, 3);
-        Tile rookTile = BoardManager.Instance.TileSet[rookIndex.x, rookIndex.y];
-        PieceBehaviour rookPiece = rookTile.HeldPiece;
-        rookTile.HeldPiece = null;
-
-        Vector2Int rookMoveIndex = _currentSelection.CurrentIndex + new Vector2Int(0, 1);
-        Tile rookMoveTile = BoardManager.Instance.TileSet[rookMoveIndex.x, rookMoveIndex.y];
-        rookMoveTile.HeldPiece = rookPiece;
-        
-        Vector3 rookMovePos = new Vector3(rookMoveTile.Index.y, 0.001f, rookMoveTile.Index.x);
-        rookPiece.SetPosition(rookMovePos);
-        rookPiece.HasBeenMoved = true;
     }
 }

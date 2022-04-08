@@ -14,6 +14,9 @@ public class Tile : MonoBehaviour
     private bool _isSelected, _isValid, _isCapturable;
     private Material _hoverMat, _selectMat, _validMat, _captureMat;
 
+    private bool _enPassant;
+    private int _enPassantCounter;
+
     public BoxCollider Collider => _collider;
 
     public Vector2Int Index { get; set; }
@@ -21,8 +24,16 @@ public class Tile : MonoBehaviour
     public PieceBehaviour HeldPiece { get; set; }
 
     public bool Castling { get; set; }
-    
-    public bool EnPassant { get; set; }
+
+    public bool EnPassant
+    {
+        get => _enPassant;
+        set
+        {
+            _enPassant = value;
+            _enPassantCounter = 0;
+        }
+    }
 
     private void Awake()
     {
@@ -116,5 +127,18 @@ public class Tile : MonoBehaviour
     {
         _image.color = new Color(0, 0, 0, 0);
         _highlightBorder.SetActive(false);
+    }
+
+    public void ProcessEnPassant()
+    {
+        if (_enPassantCounter > 0)
+        {
+            _enPassant = false;
+        }
+
+        if (_enPassant) 
+        {
+            _enPassantCounter++;
+        }
     }
 }

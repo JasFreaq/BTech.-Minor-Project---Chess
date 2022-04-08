@@ -9,9 +9,7 @@ public class PlayerInputManager : InputManager
     [SerializeField] private LayerMask _rayLayerMask;
 
     private Camera _mainCamera;
-
-    //private PlayerType _playerTeam;
-
+    
     private Tile _hoveredTile;
 
     void Start()
@@ -47,7 +45,7 @@ public class PlayerInputManager : InputManager
             }
             
             if (currentHoveredTile.HeldPiece
-                /*&& currentHoveredTile.HeldPiece.PieceData.PlayerType == _playerTeam*/)
+                && currentHoveredTile.HeldPiece.PieceData.PlayerType == _playerTeam)
             {
                 HoverTile(currentHoveredTile);
             }
@@ -94,6 +92,16 @@ public class PlayerInputManager : InputManager
         {
             _hoveredTile.SetHover(_isPieceSelected, false);
             _hoveredTile = null;
+        }
+    }
+
+    public override void UnselectTile(bool movedToTile = false)
+    {
+        UnhoverTile();
+
+        if (_currentSelectedTile) 
+        {
+            base.UnselectTile(movedToTile);
         }
     }
 }
