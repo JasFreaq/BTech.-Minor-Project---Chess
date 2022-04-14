@@ -109,7 +109,6 @@ GameObject:
   m_Component:
   - component: {fileID: 3168540018673729798}
   - component: {fileID: 7997427176479593996}
-  - component: {fileID: 2027415091}
   m_Layer: 0
   m_Name: Game Board
   m_TagString: Untagged
@@ -147,20 +146,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _tileSize: 1
   _tilePrefab: {fileID: 338941771530300777, guid: 187a9a419d44c134d9312a2a06f192fa, type: 3}
---- !u!114 &2027415091
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5598539059075345943}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7df94739db2ae8f41aa8c006c4b21753, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _hoverMat: {fileID: 2100000, guid: 984b6f7844acbc849ab41d12a5edd5fe, type: 2}
-  _selectMat: {fileID: 2100000, guid: 5708d599b47ace94795b69662b4aace4, type: 2}
 --- !u!1001 &8545777057050179513
 PrefabInstance:
   m_ObjectHideFlags: 0

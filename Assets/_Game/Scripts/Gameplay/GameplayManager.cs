@@ -6,8 +6,7 @@ public class GameplayManager : MonoBehaviour
 {
     private Dictionary<PieceType, PieceLogic> _logicHandlers = new Dictionary<PieceType, PieceLogic>(6);
 
-    private List<Vector2Int> _whiteMoves = new List<Vector2Int>();
-    private List<Vector2Int> _blackMoves = new List<Vector2Int>();
+    private bool _gameOver;
 
     #region Singleton Pattern
 
@@ -16,7 +15,9 @@ public class GameplayManager : MonoBehaviour
     public static GameplayManager Instance => _instance;
 
     #endregion
-    
+
+    public bool GameOver => _gameOver;
+
     private void Awake()
     {
         _instance = this;
@@ -95,5 +96,14 @@ public class GameplayManager : MonoBehaviour
         Vector2Int move = currentIndex + new Vector2Int(direction, 0);
         Tile tile = BoardManager.Instance.TileSet[move.x, move.y];
         tile.EnPassant = true;
+    }
+
+    public void CheckCapturedPiece(PieceData pieceData)
+    {
+        if (pieceData.PieceType == PieceType.King)
+        {
+            UIManager.Instance.DisplayGameOver(pieceData.PlayerType == PlayerType.Black);
+            _gameOver = true;
+        }
     }
 }

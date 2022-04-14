@@ -15,6 +15,7 @@ MonoBehaviour:
   _pieceData:
     _playerType: 0
     _pieceType: 4
+    _pieceValue: 90
   _startIndices:
   - {x: 3, y: 0}
 --- !u!1001 &1784069949378657002

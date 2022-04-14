@@ -6,6 +6,8 @@ using UnityEngine.UI;
 
 public class Tile : MonoBehaviour
 {
+    private static readonly float VisibleAlpha = 0.6078f;
+    
     [SerializeField] private GameObject _highlightBorder;
 
     private BoxCollider _collider;
@@ -57,7 +59,7 @@ public class Tile : MonoBehaviour
             if (!isMoveCandidate) 
             {
                 _image.material = _hoverMat;
-                _image.color = new Color(0, 0, 0, 1);
+                _image.color = new Color(0, 0, 0, VisibleAlpha);
             }
 
             _highlightBorder.SetActive(true);
@@ -80,7 +82,7 @@ public class Tile : MonoBehaviour
         if (_isSelected)
         {
             _image.material = _selectMat;
-            _image.color = new Color(0, 0, 0, 1);
+            _image.color = new Color(0, 0, 0, VisibleAlpha);
         }
         else
         {
@@ -94,7 +96,7 @@ public class Tile : MonoBehaviour
         if (valid)
         {
             _image.material = _validMat;
-            _image.color = new Color(0, 0, 0, 1);
+            _image.color = new Color(0, 0, 0, VisibleAlpha);
         }
         else
         {
@@ -108,7 +110,7 @@ public class Tile : MonoBehaviour
         if (capturable)
         {
             _image.material = _captureMat;
-            _image.color = new Color(0, 0, 0, 1);
+            _image.color = new Color(0, 0, 0, VisibleAlpha);
         }
         else
         {

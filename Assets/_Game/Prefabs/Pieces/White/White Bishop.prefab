@@ -15,6 +15,7 @@ MonoBehaviour:
   _pieceData:
     _playerType: 0
     _pieceType: 2
+    _pieceValue: 30
   _startIndices:
   - {x: 2, y: 0}
   - {x: 5, y: 0}

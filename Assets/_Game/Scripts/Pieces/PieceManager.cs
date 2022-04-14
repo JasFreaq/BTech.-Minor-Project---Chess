@@ -118,6 +118,8 @@ public class PieceManager : MonoBehaviour
             StartCoroutine(capturedPieces[i].SetPositionRoutine(pos));
         }
 
+        GameplayManager.Instance.CheckCapturedPiece(capturedPiece.PieceData);
+        EconomyManager.Instance.AddValue(capturedPiece.PieceData);
         StartCoroutine(capturedPiece.SetScaleRoutine(_capturedPieceScale));
     }
     

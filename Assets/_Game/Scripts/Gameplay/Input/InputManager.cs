@@ -14,7 +14,10 @@ public abstract class InputManager : MonoBehaviour
 
     private void Update()
     {
-        ProcessInput();
+        if (!GameplayManager.Instance.GameOver)
+        {
+            ProcessInput();
+        }
     }
 
     protected abstract void ProcessInput();

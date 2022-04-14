@@ -19,12 +19,17 @@ public class PlayerInputManager : InputManager
     
     protected override void ProcessInput()
     {
+        Process3DInput();
+    }
+
+    private void Process3DInput()
+    {
         Ray ray = _mainCamera.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out RaycastHit hit, _rayDistance, _rayLayerMask))
         {
             bool foundValidMove = false;
             Tile currentHoveredTile = BoardManager.Instance.TileRefs[hit.collider.GetInstanceID()];
-            
+
             if (_isPieceSelected)
             {
                 List<Vector2Int> possibleMoves = PieceManager.Instance.CurrentSelection.PossibleMoves;
@@ -43,7 +48,7 @@ public class PlayerInputManager : InputManager
                 if (!foundValidMove)
                     UnhoverTile();
             }
-            
+
             if (currentHoveredTile.HeldPiece
                 && currentHoveredTile.HeldPiece.PieceData.PlayerType == _playerTeam)
             {
@@ -54,14 +59,14 @@ public class PlayerInputManager : InputManager
                 UnhoverTile();
             }
         }
-        else 
+        else
         {
             UnhoverTile();
         }
-        
+
         if (Input.GetMouseButtonDown(0))
         {
-            if (_hoveredTile) 
+            if (_hoveredTile)
             {
                 SetTileSelection(_hoveredTile);
                 _hoveredTile = null;
