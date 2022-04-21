@@ -11,8 +11,12 @@ public class TaskBarHandler : MonoBehaviour
 
     private float _t;
     private bool _lerping, _opening, _closing;
+    private bool _open, _closed;
+    private bool _processingPromotion;
     private Vector2 _srcPos;
     private Vector2 _destPos;
+
+    private int _selectedPromotion;
 
     #region Singleton Pattern
 
@@ -38,6 +42,17 @@ public class TaskBarHandler : MonoBehaviour
             if (Vector2.Distance(transform.localPosition, _destPos) < Mathf.Epsilon)
             {
                 transform.localPosition = _destPos;
+                if (_opening)
+                {
+                    _open = true;
+                    _closed = false;
+                }
+                if (_closing)
+                {
+                    _open = false;
+                    _closed = true;
+                }
+
                 _opening = false;
                 _closing = false;
                 _lerping = false;
@@ -47,7 +62,7 @@ public class TaskBarHandler : MonoBehaviour
 
     public void OpenTaskbar()
     {
-        if (!_opening) 
+        if (!_opening && !_open) 
         {
             if (_lerping)
             {
@@ -62,14 +77,16 @@ public class TaskBarHandler : MonoBehaviour
             _destPos = _openPos;
 
             _opening = true;
+            _open = false;
             _closing = false;
+            _closed = false;
             _lerping = true;
         }
     }
 
     public void CloseTaskbar()
     {
-        if (!_closing)
+        if (!_closing && !_closed && !_processingPromotion)
         {
             if (_lerping)
             {
@@ -84,8 +101,30 @@ public class TaskBarHandler : MonoBehaviour
             _destPos = _closePos;
 
             _opening = false;
+            _open = false;
             _closing = true;
+            _closed = false;
             _lerping = true;
         }
+    }
+
+    public IEnumerator ProcessPromotionSelectionRoutine()
+    {
+        _selectedPromotion = 0;
+        _processingPromotion = true;
+
+        while (_selectedPromotion == 0)
+        {
+            yield return new WaitForEndOfFrame();
+        }
+
+        _processingPromotion = false;
+        CloseTaskbar();
+        yield return _selectedPromotion;
+    }
+
+    public void SelectPromotionPieceType(int index)
+    {
+        _selectedPromotion = index;
     }
 }

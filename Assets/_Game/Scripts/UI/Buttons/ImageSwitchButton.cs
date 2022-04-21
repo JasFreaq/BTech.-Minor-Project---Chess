@@ -5,11 +5,12 @@ using UnityEngine.UI;
 
 public class ImageSwitchButton : MonoBehaviour
 {
+    [Header("Icon")]
     [SerializeField] private Image _buttonImage;
     [SerializeField] private Sprite _whiteSprite;
     [SerializeField] private Sprite _blackSprite;
 
-    public void SetButtonType()
+    public virtual void ChangeButtonType()
     {
         _buttonImage.sprite = TurnManager.Instance.CurrentPlayerType == PlayerType.White ?
             _whiteSprite : _blackSprite;

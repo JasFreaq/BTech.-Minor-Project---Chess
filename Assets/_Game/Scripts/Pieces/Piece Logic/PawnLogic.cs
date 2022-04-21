@@ -47,39 +47,44 @@ public class PawnLogic : PieceLogic
 
         if (piece.ValidMoves.Count > 0)
         {
-            int enPassantRow;
-            if (piece.PieceData.PlayerType == PlayerType.White)
-            {
-                enPassantRow = 5;
-            }
-            else
-            {
-                enPassantRow = 2;
-            }
+            ProcessEnPassant(piece);
+        }
+    }
 
-            Vector2Int firstMove = piece.ValidMoves[0];
-            if (firstMove.x > 0)
-            {
-                Vector2Int move = firstMove + new Vector2Int(-1, 0);
-                Tile tile = BoardManager.Instance.TileSet[move.y, move.x];
-                PieceBehaviour heldPiece = tile.HeldPiece;
-                if ((heldPiece && heldPiece.PieceData.PlayerType != piece.PieceData.PlayerType)
-                    || (firstMove.y == enPassantRow && tile.EnPassant)) 
-                {
-                    piece.PossibleMoves.Add(move);
-                }
-            }
+    private static void ProcessEnPassant(PieceBehaviour piece)
+    {
+        int enPassantRow;
+        if (piece.PieceData.PlayerType == PlayerType.White)
+        {
+            enPassantRow = 5;
+        }
+        else
+        {
+            enPassantRow = 2;
+        }
 
-            if (firstMove.x < 7)
+        Vector2Int firstMove = piece.ValidMoves[0];
+        if (firstMove.x > 0)
+        {
+            Vector2Int move = firstMove + new Vector2Int(-1, 0);
+            Tile tile = BoardManager.Instance.TileSet[move.y, move.x];
+            PieceBehaviour heldPiece = tile.HeldPiece;
+            if ((heldPiece && heldPiece.PieceData.PlayerType != piece.PieceData.PlayerType)
+                || (firstMove.y == enPassantRow && tile.EnPassant))
             {
-                Vector2Int move = firstMove + new Vector2Int(1, 0);
-                Tile tile = BoardManager.Instance.TileSet[move.y, move.x];
-                PieceBehaviour heldPiece = tile.HeldPiece;
-                if ((heldPiece && heldPiece.PieceData.PlayerType != piece.PieceData.PlayerType)
-                    || (firstMove.y == enPassantRow && tile.EnPassant)) 
-                {
-                    piece.PossibleMoves.Add(move);
-                }
+                piece.PossibleMoves.Add(move);
+            }
+        }
+
+        if (firstMove.x < 7)
+        {
+            Vector2Int move = firstMove + new Vector2Int(1, 0);
+            Tile tile = BoardManager.Instance.TileSet[move.y, move.x];
+            PieceBehaviour heldPiece = tile.HeldPiece;
+            if ((heldPiece && heldPiece.PieceData.PlayerType != piece.PieceData.PlayerType)
+                || (firstMove.y == enPassantRow && tile.EnPassant))
+            {
+                piece.PossibleMoves.Add(move);
             }
         }
     }

@@ -126,10 +126,9 @@ public class PieceManager : MonoBehaviour
     public void MovedSelectedPiece()
     {
         _currentSelection = null;
-        SetPossibleMoves();
     }
     
-    private void SetPossibleMoves()
+    public void SetPossibleMoves()
     {
         foreach (PieceBehaviour piece in _playingWhites)
         {
@@ -140,5 +139,46 @@ public class PieceManager : MonoBehaviour
         {
             piece.SetPossibleMoves();
         }
+    }
+
+    public PieceBehaviour GeneratePromotionPiece(int selectedIndex, PlayerType playerType)
+    {
+        PieceType pieceType = PieceType.Pawn;
+        switch (selectedIndex)
+        {
+            case 1:
+                pieceType = PieceType.Queen;
+                break;
+            
+            case 2:
+                pieceType = PieceType.Rook;
+                break;
+            
+            case 3:
+                pieceType = PieceType.Knight;
+                break;
+            
+            case 4:
+                pieceType = PieceType.Bishop;
+                break;
+        }
+
+        PieceBehaviour prefab = null;
+        foreach (PieceBehaviour piecePrefab in _piecePrefabs)
+        {
+            if (piecePrefab.PieceData.PieceType == pieceType
+                && piecePrefab.PieceData.PlayerType == playerType)
+            {
+                prefab = piecePrefab;
+                break;
+            }
+        }
+
+        Quaternion pieceRot = Quaternion.identity;
+        if (prefab.PieceData.PlayerType == PlayerType.Black)
+            pieceRot = Quaternion.Euler(0, 180, 0);
+        PieceBehaviour piece = Instantiate(prefab, Vector3.zero, pieceRot, transform);
+
+        return piece;
     }
 }

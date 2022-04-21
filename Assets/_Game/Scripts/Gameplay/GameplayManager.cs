@@ -40,12 +40,7 @@ public class GameplayManager : MonoBehaviour
         return _logicHandlers[pieceType];
     }
 
-    public void MoveSelectedPiece(Vector2Int newTileIndex)
-    {
-        StartCoroutine(MoveSelectedPieceRoutine(newTileIndex));
-    }
-
-    private IEnumerator MoveSelectedPieceRoutine(Vector2Int newTileIndex)
+    public IEnumerator MoveSelectedPieceRoutine(Vector2Int newTileIndex)
     {
         PieceBehaviour currentSelection = PieceManager.Instance.CurrentSelection;
         if (!currentSelection.HasBeenMoved)
@@ -61,30 +56,29 @@ public class GameplayManager : MonoBehaviour
 
         BoardManager.Instance.ResetHighlightedTiles();
         PieceManager.Instance.MovedSelectedPiece();
-        TurnManager.Instance.EndTurn();
     }
 
-    public void PerformCastling()
+    public IEnumerator PerformCastlingRoutine(PieceBehaviour currentSelection)
     {
-        Vector2Int currentIndex = PieceManager.Instance.CurrentSelection.CurrentIndex;
-        Vector2Int rookIndex = currentIndex + new Vector2Int(0, 3);
-        Tile rookTile = BoardManager.Instance.TileSet[rookIndex.y, rookIndex.x];
+        Vector2Int currentIndex = currentSelection.CurrentIndex;
+        Vector2Int rookIndex = currentIndex + new Vector2Int(0, 1);
+        Tile rookTile = BoardManager.Instance.TileSet[rookIndex.x, rookIndex.y];
         PieceBehaviour rookPiece = rookTile.HeldPiece;
         rookTile.HeldPiece = null;
 
-        Vector2Int rookMoveIndex = currentIndex + new Vector2Int(0, 1);
-        Tile rookMoveTile = BoardManager.Instance.TileSet[rookMoveIndex.y, rookMoveIndex.x];
-        rookMoveTile.HeldPiece = rookPiece;
+        Vector2Int rookMoveIndex = currentIndex + new Vector2Int(0, -1);
+        Tile rookMoveTile = BoardManager.Instance.TileSet[rookMoveIndex.x, rookMoveIndex.y];
+                rookMoveTile.HeldPiece = rookPiece;
 
         Vector3 rookMovePos = new Vector3(rookMoveTile.Index.y, 0.001f, rookMoveTile.Index.x);
-        StartCoroutine(rookPiece.SetPositionRoutine(rookMovePos));
+        yield return rookPiece.SetPositionRoutine(rookMovePos);
         rookPiece.HasBeenMoved = true;
     }
     
-    public void EnableEnPassant(Vector2Int currentIndex)
+    public void EnableEnPassant(PieceBehaviour currentSelection, Vector2Int currentIndex)
     {
         int direction;
-        if (PieceManager.Instance.CurrentSelection.PieceData.PlayerType == PlayerType.White)
+        if (currentSelection.PieceData.PlayerType == PlayerType.White)
         {
             direction = -1;
         }
@@ -96,6 +90,23 @@ public class GameplayManager : MonoBehaviour
         Vector2Int move = currentIndex + new Vector2Int(direction, 0);
         Tile tile = BoardManager.Instance.TileSet[move.x, move.y];
         tile.EnPassant = true;
+    }
+        
+    public IEnumerator ProcessPromotionRoutine(PieceBehaviour pawn)
+    {
+        Vector2Int currentIndex = pawn.CurrentIndex;
+        Tile tile = BoardManager.Instance.TileSet[currentIndex.y, currentIndex.x];
+
+        Coroutine<int> routine = this.StartCoroutine<int>(UIManager.Instance.ProcessPromotionUIRoutine());
+        yield return routine.coroutine;
+        int selectedIndex = routine.returnVal;
+
+        PieceBehaviour promotedPiece = PieceManager.Instance.GeneratePromotionPiece(selectedIndex, pawn.PieceData.PlayerType);
+        promotedPiece.CurrentIndex = pawn.CurrentIndex;
+        promotedPiece.transform.position = pawn.transform.position;
+        tile.HeldPiece = promotedPiece;
+        
+        Destroy(pawn.gameObject);
     }
 
     public void CheckCapturedPiece(PieceData pieceData)

@@ -4,7 +4,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PieceButton : ImageSwitchButton
+public class PieceButton : TaskbarButton
 {
+    [Header("Piece")]
     [SerializeField] private PieceType _pieceType;
 }

@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
+    [SerializeField] TaskBarHandler _taskBarHandler;
+
     [Header("Economy")]
     [SerializeField] private Text _currencyText;
     [SerializeField] private Image _taskBarImage;
@@ -14,22 +16,14 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject _blackWinPanel;
     [SerializeField] private GameObject _gameOverOptionsPanel;
 
-    [Header("Button Icons")] 
-    [SerializeField] private Image _powerKingImage;
-    [SerializeField] private Image _shieldRookImage;
-    [SerializeField] private Image _barrierBishopImage;
-
-    [SerializeField] private Sprite _whitePowerKingSprite;
-    [SerializeField] private Sprite _blackPowerKingSprite;
-    [SerializeField] private Sprite _whiteShieldRookSprite;
-    [SerializeField] private Sprite _blackShieldRookSprite;
-    [SerializeField] private Sprite _whiteBarrierBishopSprite;
-    [SerializeField] private Sprite _blackBarrierBishopSprite;
+    [Header("Button Icons")]
+    [SerializeField] private TaskbarButton[] _powerButtons = new TaskbarButton[3];
 
     [Header("Piece Buttons")] 
     [SerializeField] private GameObject _piecesButton;
     [SerializeField] private GameObject _pieceButtonsHolder;
-    [SerializeField] private ImageSwitchButton[] _imageSwitchButtons = new ImageSwitchButton[5];
+    [SerializeField] private PieceButton[] _pieceButtons = new PieceButton[4];
+    [SerializeField] ImageSwitchButton _closeButton;
 
     #region Singleton Pattern
 
@@ -73,19 +67,12 @@ public class UIManager : MonoBehaviour
 
     private void SwitchIcons()
     {
-        if (TurnManager.Instance.CurrentPlayerType == PlayerType.White)
+        _currencyText.text = TurnManager.Instance.CurrentPlayerType == PlayerType.White ?
+            EconomyManager.Instance.WhiteValue.ToString() : EconomyManager.Instance.BlackValue.ToString();
+
+        foreach (TaskbarButton powerButton in _powerButtons)
         {
-            _currencyText.text = EconomyManager.Instance.WhiteValue.ToString();
-            _powerKingImage.sprite = _whitePowerKingSprite;
-            _shieldRookImage.sprite = _whiteShieldRookSprite;
-            _barrierBishopImage.sprite = _whiteBarrierBishopSprite;
-        }
-        else
-        {
-            _currencyText.text = EconomyManager.Instance.BlackValue.ToString();
-            _powerKingImage.sprite = _blackPowerKingSprite;
-            _shieldRookImage.sprite = _blackShieldRookSprite;
-            _barrierBishopImage.sprite = _blackBarrierBishopSprite;
+            powerButton.ChangeButtonType();
         }
     }
 
@@ -98,16 +85,28 @@ public class UIManager : MonoBehaviour
     {
         if (toggle) 
         {
-            foreach (ImageSwitchButton switchButton in _imageSwitchButtons)
+            foreach (PieceButton pieceButton in _pieceButtons)
             {
-                switchButton.SetButtonType();
+                pieceButton.ChangeButtonType(true);
             }
-        }
 
+            _closeButton.ChangeButtonType();
+        }
+                
         _piecesButton.SetActive(!toggle);
         _pieceButtonsHolder.SetActive(toggle);
     }
     
+    public IEnumerator ProcessPromotionUIRoutine()
+    {
+        TogglePieceButtons(true);
+        _taskBarHandler.OpenTaskbar();
+
+        Coroutine<int> routine = this.StartCoroutine<int>(_taskBarHandler.ProcessPromotionSelectionRoutine());
+        yield return routine.coroutine;
+        yield return routine.returnVal;
+    }
+
     public void DisplayGameOver(bool whiteWin)
     {
         if (whiteWin)

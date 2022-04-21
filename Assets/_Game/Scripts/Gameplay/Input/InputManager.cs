@@ -54,12 +54,12 @@ public abstract class InputManager : MonoBehaviour
                 }
                 else
                 {
-                    MoveSelectedPiece();
+                    StartCoroutine(MoveSelectedPieceRoutine());
                 }
             }
             else
             {
-                MoveSelectedPiece();
+                StartCoroutine(MoveSelectedPieceRoutine());
             }
         }
         else if (_currentSelectedTile) 
@@ -68,7 +68,7 @@ public abstract class InputManager : MonoBehaviour
         }
     }
 
-    private void MoveSelectedPiece()
+    private IEnumerator MoveSelectedPieceRoutine()
     {
         PieceBehaviour capturedPiece;
         if (_currentSelectedTile.EnPassant &&
@@ -98,35 +98,56 @@ public abstract class InputManager : MonoBehaviour
         _previousSelectedTile.HeldPiece = null;
         _currentSelectedTile.HeldPiece = PieceManager.Instance.CurrentSelection;
 
-        ProcessSpecialMoves();
-        GameplayManager.Instance.MoveSelectedPiece(_currentSelectedTile.Index);
-
         if (capturedPiece)
         {
             PieceManager.Instance.CapturePiece(capturedPiece);
         }
-        
+
         BoardManager.Instance.ResetHighlightedTiles();
+        PieceBehaviour currentSelection = PieceManager.Instance.CurrentSelection;
+        Tile currentSelectedTile = _currentSelectedTile;
         UnselectTile(true);
+
+        yield return GameplayManager.Instance.MoveSelectedPieceRoutine(currentSelectedTile.Index);
+        yield return ProcessSpecialMovesRoutine(currentSelection, currentSelectedTile);
+        PieceManager.Instance.SetPossibleMoves();
+        yield return TurnManager.Instance.EndTurnRoutine();
     }
 
-    private void ProcessSpecialMoves()
+    private IEnumerator ProcessSpecialMovesRoutine(PieceBehaviour currentSelection, Tile currentSelectedTile)
     {
-        switch (PieceManager.Instance.CurrentSelection.PieceData.PieceType)
+        switch (currentSelection.PieceData.PieceType)
         {
             case PieceType.Pawn:
-                Vector2Int previousIndex = _previousSelectedTile.Index;
-                Vector2Int currentIndex = _currentSelectedTile.Index;
-                if (Mathf.Abs(previousIndex.x - currentIndex.x) == 2)
-                {
-                    GameplayManager.Instance.EnableEnPassant(currentIndex);
-                }
+                yield return ProcessPawnSpecialMovesRoutine(currentSelection, currentSelectedTile);
                 break;
 
             case PieceType.King:
-                if (_currentSelectedTile.Castling)
-                    GameplayManager.Instance.PerformCastling();
+                yield return ProcessKingSpecialMovesRoutine(currentSelection, currentSelectedTile);
                 break;
+        }
+    }
+
+    private IEnumerator ProcessPawnSpecialMovesRoutine(PieceBehaviour currentSelection, Tile currentSelectedTile)
+    {
+        Vector2Int previousIndex = _previousSelectedTile.Index;
+        Vector2Int currentIndex = currentSelectedTile.Index;
+        if (Mathf.Abs(previousIndex.x - currentIndex.x) == 2)
+        {
+            GameplayManager.Instance.EnableEnPassant(currentSelection, currentIndex);
+        }
+
+        if (currentIndex.x == 0 || currentIndex.x == 7)
+        {
+            yield return GameplayManager.Instance.ProcessPromotionRoutine(currentSelection);
+        }
+    }
+
+    private IEnumerator ProcessKingSpecialMovesRoutine(PieceBehaviour currentSelection, Tile currentSelectedTile)
+    {
+        if (currentSelectedTile.Castling)
+        {
+            yield return GameplayManager.Instance.PerformCastlingRoutine(currentSelection);
         }
     }
 
