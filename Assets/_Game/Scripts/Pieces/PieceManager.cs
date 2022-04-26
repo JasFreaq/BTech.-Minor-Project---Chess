@@ -174,11 +174,11 @@ public class PieceManager : MonoBehaviour
             }
         }
 
-        Quaternion pieceRot = Quaternion.identity;
-        if (prefab.PieceData.PlayerType == PlayerType.Black)
-            pieceRot = Quaternion.Euler(0, 180, 0);
-        PieceBehaviour piece = Instantiate(prefab, Vector3.zero, pieceRot, transform);
+
+        PieceBehaviour piece = Instantiate(prefab, Vector3.zero, Quaternion.identity, transform);
 
         return piece;
     }
+
+
 }

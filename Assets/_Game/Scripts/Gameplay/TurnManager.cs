@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -14,8 +13,8 @@ public class TurnManager : MonoBehaviour
     [SerializeField] private float _lerpTime = 3;
     
     private Transform _mainCamera;
-    private PlayerType _currentPlayerType = PlayerType.White;
     private InputManager _currentPlayer;
+    private PlayerType _currentPlayerType = PlayerType.White;
 
     #region Singleton Pattern
 
@@ -24,6 +23,8 @@ public class TurnManager : MonoBehaviour
     public static TurnManager Instance => _instance;
 
     #endregion
+
+    public InputManager CurrentPlayer => _currentPlayer;
 
     public PlayerType CurrentPlayerType => _currentPlayerType;
 
@@ -40,11 +41,16 @@ public class TurnManager : MonoBehaviour
         _blackPlayer.enabled = false;
     }
         
+    public void ToggleCurrentPlayerInput(bool toggle)
+    {
+        _currentPlayer.enabled = toggle;
+    }
+
     public IEnumerator EndTurnRoutine()
     {
         if (!GameplayManager.Instance.GameOver)
         {
-            UIManager.Instance.TogglePieceButtons(false);
+            UIManager.Instance.TogglePieceButtonsWrapper(false);
             BoardManager.Instance.ProcessEnPassant();
 
             _currentPlayer.UnselectTile();
@@ -88,8 +94,6 @@ public class TurnManager : MonoBehaviour
             _currentPlayer.enabled = true;
         }
     }
-
-    
 
     private IEnumerator PanCameraRoutine(Transform srcTransform, Transform destTransform)
     {

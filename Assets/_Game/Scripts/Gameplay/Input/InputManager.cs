@@ -22,7 +22,7 @@ public abstract class InputManager : MonoBehaviour
 
     protected abstract void ProcessInput();
 
-    protected void SetTileSelection(Tile tile)
+    public void SetTileSelection(Tile tile)
     {
         if (_currentSelectedTile)
         {

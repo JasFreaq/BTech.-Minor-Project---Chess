@@ -18,8 +18,7 @@ public class UIManager : MonoBehaviour
 
     [Header("Button Icons")]
     [SerializeField] private TaskbarButton[] _powerButtons = new TaskbarButton[3];
-
-    [Header("Piece Buttons")] 
+    [SerializeField] Text[] _costTexts = new Text[7];
     [SerializeField] private GameObject _piecesButton;
     [SerializeField] private GameObject _pieceButtonsHolder;
     [SerializeField] private PieceButton[] _pieceButtons = new PieceButton[4];
@@ -36,6 +35,11 @@ public class UIManager : MonoBehaviour
     private void Awake()
     {
         _instance = this;
+    }
+
+    private void Start()
+    {
+        UpdateCost();
     }
 
     public void FadeColor(Color srcColor, Color destColor, float lerpTime)
@@ -58,6 +62,7 @@ public class UIManager : MonoBehaviour
             if (Mathf.Abs(t - 0.5f) <= Time.deltaTime && !fadedAmount)
             {
                 SwitchIcons();
+                UpdateCost();
                 fadedAmount = true;
             }
             
@@ -75,19 +80,19 @@ public class UIManager : MonoBehaviour
             powerButton.ChangeButtonType();
         }
     }
-
-    public void ChangeCurrencyText(int value)
+    
+    public void TogglePieceButtonsWrapper(bool toggle)
     {
-        _currencyText.text = value.ToString();
-    }
+        TogglePieceButtons(toggle);
+    }    
 
-    public void TogglePieceButtons(bool toggle)
+    private void TogglePieceButtons(bool toggle, bool deactivateText = false)
     {
         if (toggle) 
         {
             foreach (PieceButton pieceButton in _pieceButtons)
             {
-                pieceButton.ChangeButtonType(true);
+                pieceButton.ChangeButtonType(deactivateText);
             }
 
             _closeButton.ChangeButtonType();
@@ -99,12 +104,26 @@ public class UIManager : MonoBehaviour
     
     public IEnumerator ProcessPromotionUIRoutine()
     {
-        TogglePieceButtons(true);
+        TogglePieceButtons(true, true);
         _taskBarHandler.OpenTaskbar();
 
         Coroutine<int> routine = this.StartCoroutine<int>(_taskBarHandler.ProcessPromotionSelectionRoutine());
         yield return routine.coroutine;
         yield return routine.returnVal;
+    }
+
+    public void ChangeCurrencyText(int value)
+    {
+        _currencyText.text = value.ToString();
+    }
+
+    public void UpdateCost()
+    {
+        int[] costs = EconomyManager.Instance.GetCosts(TurnManager.Instance.CurrentPlayerType);
+        for (int i = 0; i < costs.Length; i++)
+        {
+            _costTexts[i].text = costs[i].ToString();
+        }
     }
 
     public void DisplayGameOver(bool whiteWin)

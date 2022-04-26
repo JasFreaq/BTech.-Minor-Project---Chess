@@ -4,9 +4,12 @@ using UnityEngine;
 
 public class GameplayManager : MonoBehaviour
 {
+    [SerializeField] TaskBarHandler _taskBarHandler;
+
     private Dictionary<PieceType, PieceLogic> _logicHandlers = new Dictionary<PieceType, PieceLogic>(6);
 
     private bool _gameOver;
+    private bool _processingPawnPromotion;
 
     #region Singleton Pattern
 
@@ -94,19 +97,83 @@ public class GameplayManager : MonoBehaviour
         
     public IEnumerator ProcessPromotionRoutine(PieceBehaviour pawn)
     {
-        Vector2Int currentIndex = pawn.CurrentIndex;
-        Tile tile = BoardManager.Instance.TileSet[currentIndex.y, currentIndex.x];
+        _processingPawnPromotion = true;
 
         Coroutine<int> routine = this.StartCoroutine<int>(UIManager.Instance.ProcessPromotionUIRoutine());
         yield return routine.coroutine;
         int selectedIndex = routine.returnVal;
 
+        PromotePawn(pawn, selectedIndex);
+        _processingPawnPromotion = false;
+    }
+
+    private void PromotePawn(PieceBehaviour pawn, int selectedIndex)
+    {
+        Vector2Int currentIndex = pawn.CurrentIndex;
+        Tile tile = BoardManager.Instance.TileSet[currentIndex.x, currentIndex.y];
+
         PieceBehaviour promotedPiece = PieceManager.Instance.GeneratePromotionPiece(selectedIndex, pawn.PieceData.PlayerType);
         promotedPiece.CurrentIndex = pawn.CurrentIndex;
         promotedPiece.transform.position = pawn.transform.position;
+        promotedPiece.transform.rotation = pawn.transform.rotation;
         tile.HeldPiece = promotedPiece;
-        
+
         Destroy(pawn.gameObject);
+    }
+
+    public void ProcessPowerup(int index)
+    {
+        if (!_processingPawnPromotion) 
+        {
+            switch (index)
+            {
+                case 0:
+                    if (PowerupSelectionIsValid(PieceType.King, 0))
+                    {
+
+                    }
+                    break;
+
+                case 1:
+                    if (PowerupSelectionIsValid(PieceType.Rook, 1))
+                    {
+
+                    }
+                    break;
+
+                case 2:
+                    if (PowerupSelectionIsValid(PieceType.Bishop, 2))
+                    {
+
+                    }
+                    break;
+
+                case 3:
+                case 4:
+                case 5:
+                case 6:
+                    if (PowerupSelectionIsValid(PieceType.Pawn, index))
+                    {
+                        PromotePawn(PieceManager.Instance.CurrentSelection, index - 2);
+                        UIManager.Instance.UpdateCost();
+                    }
+                    break;
+            }
+        }
+    }
+
+    private bool PowerupSelectionIsValid(PieceType pieceType, int index)
+    {
+        PieceBehaviour piece = PieceManager.Instance.CurrentSelection;
+        if (piece.PieceData.PieceType == pieceType)
+        {
+            if (EconomyManager.Instance.ProcessCost(index))
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public void CheckCapturedPiece(PieceData pieceData)

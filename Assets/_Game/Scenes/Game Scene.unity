@@ -219,6 +219,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 111801768}
+        m_TargetAssemblyTypeName: GameplayManager, Assembly-CSharp
+        m_MethodName: ProcessPowerup
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 6
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &30211586
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -273,7 +285,7 @@ MonoBehaviour:
   _whiteSprite: {fileID: 21300000, guid: 8fa0ede72455dce46857f2c4540635b5, type: 3}
   _blackSprite: {fileID: 21300000, guid: c74929db7228c7749922127b6edd1ed2, type: 3}
   _costText: {fileID: 1898536906}
-  _whiteColor: {r: 0, g: 0, b: 0, a: 0}
+  _whiteColor: {r: 0, g: 0, b: 0, a: 1}
   _blackColor: {r: 1, g: 1, b: 1, a: 1}
   _pieceType: 2
 --- !u!1 &42768120
@@ -323,7 +335,7 @@ MonoBehaviour:
   _rayDistance: 20
   _rayLayerMask:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 96
 --- !u!1 &46133154
 GameObject:
   m_ObjectHideFlags: 0
@@ -533,6 +545,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d829e8366045e604ab4fd6fc6e9aa840, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _initialCosts: 0f000000320000001e00000078000000410000002d0000002d000000
 --- !u!114 &111801768
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -545,6 +558,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1dbe68bb7423904b9310e7541439138, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _taskBarHandler: {fileID: 443789421}
 --- !u!1 &156610293
 GameObject:
   m_ObjectHideFlags: 0
@@ -1209,6 +1223,18 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+        - m_Target: {fileID: 111801766}
+          m_TargetAssemblyTypeName: TurnManager, Assembly-CSharp
+          m_MethodName: ToggleCurrentPlayerInput
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
   - eventID: 1
     callback:
       m_PersistentCalls:
@@ -1224,6 +1250,18 @@ MonoBehaviour:
             m_FloatArgument: 0
             m_StringArgument: 
             m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 111801766}
+          m_TargetAssemblyTypeName: TurnManager, Assembly-CSharp
+          m_MethodName: ToggleCurrentPlayerInput
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 1
           m_CallState: 2
 --- !u!1 &553508973
 GameObject:
@@ -1258,7 +1296,7 @@ MonoBehaviour:
   _rayDistance: 20
   _rayLayerMask:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 96
 --- !u!4 &553508975
 Transform:
   m_ObjectHideFlags: 0
@@ -1774,6 +1812,14 @@ MonoBehaviour:
   - {fileID: 1773370680}
   - {fileID: 1953813141}
   - {fileID: 936575178}
+  _costTexts:
+  - {fileID: 102414900}
+  - {fileID: 1951725760}
+  - {fileID: 1156686746}
+  - {fileID: 1051650843}
+  - {fileID: 156610295}
+  - {fileID: 2114782210}
+  - {fileID: 1898536906}
   _piecesButton: {fileID: 1259313393}
   _pieceButtonsHolder: {fileID: 46133154}
   _pieceButtons:
@@ -1996,8 +2042,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _buttonImage: {fileID: 413097038}
-  _whiteSprite: {fileID: 0}
-  _blackSprite: {fileID: 0}
+  _whiteSprite: {fileID: 21300000, guid: 9c6af5ed7384afe48ad265981e680ccb, type: 3}
+  _blackSprite: {fileID: 21300000, guid: fea32e08ea58dfe46aa70b9830796631, type: 3}
   _costText: {fileID: 1156686746}
   _whiteColor: {r: 0, g: 0, b: 0, a: 1}
   _blackColor: {r: 1, g: 1, b: 1, a: 1}
@@ -2093,6 +2139,18 @@ MonoBehaviour:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 3
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 111801768}
+        m_TargetAssemblyTypeName: GameplayManager, Assembly-CSharp
+        m_MethodName: ProcessPowerup
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 5
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -2788,7 +2846,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 777824508}
         m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
-        m_MethodName: TogglePieceButtons
+        m_MethodName: TogglePieceButtonsWrapper
         m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3307,7 +3365,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1773370678}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 111801763}
+        m_TargetAssemblyTypeName: 
+        m_MethodName: 
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1773370678
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3359,8 +3429,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _buttonImage: {fileID: 1935837649}
-  _whiteSprite: {fileID: 0}
-  _blackSprite: {fileID: 0}
+  _whiteSprite: {fileID: 21300000, guid: 141df2d54a5175948aa7708c6544c2f5, type: 3}
+  _blackSprite: {fileID: 21300000, guid: 1bbb495de2536c748b57c7a0a981acce, type: 3}
   _costText: {fileID: 102414900}
   _whiteColor: {r: 0, g: 0, b: 0, a: 1}
   _blackColor: {r: 1, g: 1, b: 1, a: 1}
@@ -3517,6 +3587,18 @@ MonoBehaviour:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 2
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 111801768}
+        m_TargetAssemblyTypeName: GameplayManager, Assembly-CSharp
+        m_MethodName: ProcessPowerup
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 4
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -4111,8 +4193,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _buttonImage: {fileID: 1122977199}
-  _whiteSprite: {fileID: 0}
-  _blackSprite: {fileID: 0}
+  _whiteSprite: {fileID: 21300000, guid: 57233e29d8cab4a4e86daee9c6eb5e1c, type: 3}
+  _blackSprite: {fileID: 21300000, guid: 1bbb495de2536c748b57c7a0a981acce, type: 3}
   _costText: {fileID: 1951725760}
   _whiteColor: {r: 0, g: 0, b: 0, a: 1}
   _blackColor: {r: 1, g: 1, b: 1, a: 1}
@@ -4201,7 +4283,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 777824508}
         m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
-        m_MethodName: TogglePieceButtons
+        m_MethodName: TogglePieceButtonsWrapper
         m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -4359,6 +4441,18 @@ MonoBehaviour:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 1
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 111801768}
+        m_TargetAssemblyTypeName: GameplayManager, Assembly-CSharp
+        m_MethodName: ProcessPowerup
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 3
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0

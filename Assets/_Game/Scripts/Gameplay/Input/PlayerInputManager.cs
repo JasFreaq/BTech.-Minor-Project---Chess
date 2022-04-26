@@ -25,6 +25,7 @@ public class PlayerInputManager : InputManager
     private void Process3DInput()
     {
         Ray ray = _mainCamera.ScreenPointToRay(Input.mousePosition);
+
         if (Physics.Raycast(ray, out RaycastHit hit, _rayDistance, _rayLayerMask))
         {
             bool foundValidMove = false;
