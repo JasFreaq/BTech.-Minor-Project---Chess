@@ -130,21 +130,24 @@ public class GameplayManager : MonoBehaviour
                 case 0:
                     if (PowerupSelectionIsValid(PieceType.King, 0))
                     {
-
+                        PieceBehaviour piece = PieceManager.Instance.CurrentSelection;
+                        piece.PowerupBehaviour.ProcessPowerup();
                     }
                     break;
 
                 case 1:
                     if (PowerupSelectionIsValid(PieceType.Rook, 1))
                     {
-
+                        PieceBehaviour piece = PieceManager.Instance.CurrentSelection;
+                        piece.PowerupBehaviour.ProcessPowerup();
                     }
                     break;
 
                 case 2:
                     if (PowerupSelectionIsValid(PieceType.Bishop, 2))
                     {
-
+                        PieceBehaviour piece = PieceManager.Instance.CurrentSelection;
+                        piece.PowerupBehaviour.ProcessPowerup();
                     }
                     break;
 
@@ -154,8 +157,8 @@ public class GameplayManager : MonoBehaviour
                 case 6:
                     if (PowerupSelectionIsValid(PieceType.Pawn, index))
                     {
-                        PromotePawn(PieceManager.Instance.CurrentSelection, index - 2);
-                        UIManager.Instance.UpdateCost();
+                        PieceBehaviour piece = PieceManager.Instance.CurrentSelection;
+                        PromotePawn(piece, index - 2);
                     }
                     break;
             }
@@ -165,10 +168,11 @@ public class GameplayManager : MonoBehaviour
     private bool PowerupSelectionIsValid(PieceType pieceType, int index)
     {
         PieceBehaviour piece = PieceManager.Instance.CurrentSelection;
-        if (piece.PieceData.PieceType == pieceType)
+        if (piece && piece.PieceData.PieceType == pieceType)
         {
             if (EconomyManager.Instance.ProcessCost(index))
             {
+                UIManager.Instance.UpdateCost();
                 return true;
             }
         }
