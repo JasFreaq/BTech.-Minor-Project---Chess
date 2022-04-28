@@ -6,15 +6,17 @@ using UnityEngine.UI;
 
 public class TurnManager : MonoBehaviour
 {
-    [SerializeField] private InputManager _whitePlayer;
-    [SerializeField] private InputManager _blackPlayer;
+    [SerializeField] private PlayerInputManager _whitePlayer;
+    [SerializeField] private PlayerInputManager _blackPlayer;
     [SerializeField] private Transform _whiteCameraTransform;
     [SerializeField] private Transform _blackCameraTransform;
     [SerializeField] private float _lerpTime = 3;
     
     private Transform _mainCamera;
-    private InputManager _currentPlayer;
+    private PlayerInputManager _currentPlayer;
     private PlayerType _currentPlayerType = PlayerType.White;
+
+    private Action _onTurnOver;
 
     #region Singleton Pattern
 
@@ -43,15 +45,15 @@ public class TurnManager : MonoBehaviour
         
     public void ToggleCurrentPlayerInput(bool toggle)
     {
-        _currentPlayer.enabled = toggle;
+        _currentPlayer.OverUI = toggle;
     }
 
-    public IEnumerator EndTurnRoutine()
+    public IEnumerator EndTurnRoutine(float pauseTime = 0)
     {
         if (!GameplayManager.Instance.GameOver)
         {
             UIManager.Instance.TogglePieceButtonsWrapper(false);
-            BoardManager.Instance.ProcessEnPassant();
+            BoardManager.Instance.ProcessConditions();
 
             _currentPlayer.UnselectTile();
             _currentPlayer.enabled = false;
@@ -60,7 +62,7 @@ public class TurnManager : MonoBehaviour
             Color srcColor, destColor;
 
             PlayerType nextTurnPlayerType;
-            InputManager nextTurnPlayer;
+            PlayerInputManager nextTurnPlayer;
 
             if (_currentPlayerType == PlayerType.White)
             {
@@ -83,9 +85,11 @@ public class TurnManager : MonoBehaviour
                 nextTurnPlayer = _whitePlayer;
             }
 
-            _mainCamera.position = destTransform.position;
-            _mainCamera.rotation = destTransform.rotation;
             _currentPlayerType = nextTurnPlayerType;
+
+            _onTurnOver.Invoke();
+
+            yield return new WaitForSeconds(pauseTime);
 
             UIManager.Instance.FadeColor(srcColor, destColor, _lerpTime);
             yield return PanCameraRoutine(srcTransform, destTransform);
@@ -108,5 +112,18 @@ public class TurnManager : MonoBehaviour
             
             yield return new WaitForEndOfFrame();
         }
+
+        _mainCamera.position = destTransform.position;
+        _mainCamera.rotation = destTransform.rotation;
+    }
+
+    public void AssignOnTurnOver(Action action)
+    {
+        _onTurnOver += action;
+    }
+    
+    public void UnassignOnTurnOver(Action action)
+    {
+        _onTurnOver -= action;
     }
 }

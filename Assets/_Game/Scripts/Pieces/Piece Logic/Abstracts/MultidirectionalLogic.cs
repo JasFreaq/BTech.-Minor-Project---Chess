@@ -20,14 +20,38 @@ public abstract class MultidirectionalLogic : PieceLogic
 
             if (!foundPiece)
             {
-                PieceBehaviour heldPiece = BoardManager.Instance.TileSet[validMove.y, validMove.x].HeldPiece;
+                Tile tile = BoardManager.Instance.TileSet[validMove.y, validMove.x];
+                PieceBehaviour heldPiece = tile.HeldPiece;
                 if (heldPiece)
                 {
                     if (heldPiece.PieceData.PlayerType != piece.PieceData.PlayerType)
                     {
-                        piece.PossibleMoves.Add(validMove);
-                    }
+                        if (!tile.BishopBarrierActive)
+                        {
+                            piece.PossibleMoves.Add(validMove);
 
+                            foundPiece = true;
+                            findCount++;
+
+                            if (findCount == _degreesOfMovement)
+                            {
+                                break;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        foundPiece = true;
+                        findCount++;
+
+                        if (findCount == _degreesOfMovement)
+                        {
+                            break;
+                        }
+                    }
+                }
+                else if (tile.RookWallActive)
+                {
                     foundPiece = true;
                     findCount++;
 

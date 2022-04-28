@@ -8,7 +8,8 @@ public class SceneParamsHolder : MonoBehaviour
     [Header("Floats")] 
     [SerializeField] private float _pieceMoveTime = 1f;
     [SerializeField] private float _pieceScaleTime = 1f;
-    
+    [SerializeField] private float _powerupTurnChangeWait = 1.5f;
+
     [Header("Materials")]
     [SerializeField] private Material _hoverMat;
     [SerializeField] private Material _selectMat;
@@ -26,6 +27,8 @@ public class SceneParamsHolder : MonoBehaviour
     public float PieceMoveTime => _pieceMoveTime;
     
     public float PieceScaleTime => _pieceScaleTime;
+    
+    public float PowerupTurnChangeWait => _powerupTurnChangeWait;
     
     public Material HoverMat => _hoverMat;
 

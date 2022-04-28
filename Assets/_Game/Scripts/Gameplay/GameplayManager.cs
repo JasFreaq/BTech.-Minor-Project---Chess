@@ -9,7 +9,6 @@ public class GameplayManager : MonoBehaviour
     private Dictionary<PieceType, PieceLogic> _logicHandlers = new Dictionary<PieceType, PieceLogic>(6);
 
     private bool _gameOver;
-    private bool _processingPawnPromotion;
 
     #region Singleton Pattern
 
@@ -76,6 +75,8 @@ public class GameplayManager : MonoBehaviour
         Vector3 rookMovePos = new Vector3(rookMoveTile.Index.y, 0.001f, rookMoveTile.Index.x);
         yield return rookPiece.SetPositionRoutine(rookMovePos);
         rookPiece.HasBeenMoved = true;
+
+        EconomyManager.Instance.AddValue(currentSelection.PieceData.PlayerType, 20);
     }
     
     public void EnableEnPassant(PieceBehaviour currentSelection, Vector2Int currentIndex)
@@ -97,17 +98,17 @@ public class GameplayManager : MonoBehaviour
         
     public IEnumerator ProcessPromotionRoutine(PieceBehaviour pawn)
     {
-        _processingPawnPromotion = true;
+        PowerupManager.Instance.ProcessingPawnPromotion = true;
 
         Coroutine<int> routine = this.StartCoroutine<int>(UIManager.Instance.ProcessPromotionUIRoutine());
         yield return routine.coroutine;
         int selectedIndex = routine.returnVal;
 
         PromotePawn(pawn, selectedIndex);
-        _processingPawnPromotion = false;
+        PowerupManager.Instance.ProcessingPawnPromotion = false;
     }
 
-    private void PromotePawn(PieceBehaviour pawn, int selectedIndex)
+    public void PromotePawn(PieceBehaviour pawn, int selectedIndex)
     {
         Vector2Int currentIndex = pawn.CurrentIndex;
         Tile tile = BoardManager.Instance.TileSet[currentIndex.x, currentIndex.y];
@@ -119,65 +120,6 @@ public class GameplayManager : MonoBehaviour
         tile.HeldPiece = promotedPiece;
 
         Destroy(pawn.gameObject);
-    }
-
-    public void ProcessPowerup(int index)
-    {
-        if (!_processingPawnPromotion) 
-        {
-            switch (index)
-            {
-                case 0:
-                    if (PowerupSelectionIsValid(PieceType.King, 0))
-                    {
-                        PieceBehaviour piece = PieceManager.Instance.CurrentSelection;
-                        piece.PowerupBehaviour.ProcessPowerup();
-                    }
-                    break;
-
-                case 1:
-                    if (PowerupSelectionIsValid(PieceType.Rook, 1))
-                    {
-                        PieceBehaviour piece = PieceManager.Instance.CurrentSelection;
-                        piece.PowerupBehaviour.ProcessPowerup();
-                    }
-                    break;
-
-                case 2:
-                    if (PowerupSelectionIsValid(PieceType.Bishop, 2))
-                    {
-                        PieceBehaviour piece = PieceManager.Instance.CurrentSelection;
-                        piece.PowerupBehaviour.ProcessPowerup();
-                    }
-                    break;
-
-                case 3:
-                case 4:
-                case 5:
-                case 6:
-                    if (PowerupSelectionIsValid(PieceType.Pawn, index))
-                    {
-                        PieceBehaviour piece = PieceManager.Instance.CurrentSelection;
-                        PromotePawn(piece, index - 2);
-                    }
-                    break;
-            }
-        }
-    }
-
-    private bool PowerupSelectionIsValid(PieceType pieceType, int index)
-    {
-        PieceBehaviour piece = PieceManager.Instance.CurrentSelection;
-        if (piece && piece.PieceData.PieceType == pieceType)
-        {
-            if (EconomyManager.Instance.ProcessCost(index))
-            {
-                UIManager.Instance.UpdateCost();
-                return true;
-            }
-        }
-
-        return false;
     }
 
     public void CheckCapturedPiece(PieceData pieceData)

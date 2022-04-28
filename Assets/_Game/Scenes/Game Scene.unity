@@ -219,8 +219,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 111801768}
-        m_TargetAssemblyTypeName: GameplayManager, Assembly-CSharp
+      - m_Target: {fileID: 111801769}
+        m_TargetAssemblyTypeName: PowerupManager, Assembly-CSharp
         m_MethodName: ProcessPowerup
         m_Mode: 3
         m_Arguments:
@@ -335,7 +335,7 @@ MonoBehaviour:
   _rayDistance: 20
   _rayLayerMask:
     serializedVersion: 2
-    m_Bits: 96
+    m_Bits: 64
 --- !u!1 &46133154
 GameObject:
   m_ObjectHideFlags: 0
@@ -471,8 +471,9 @@ GameObject:
   m_Component:
   - component: {fileID: 111801765}
   - component: {fileID: 111801768}
-  - component: {fileID: 111801767}
   - component: {fileID: 111801766}
+  - component: {fileID: 111801767}
+  - component: {fileID: 111801769}
   - component: {fileID: 111801764}
   m_Layer: 0
   m_Name: Game Manager
@@ -495,6 +496,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _pieceMoveTime: 0.8
   _pieceScaleTime: 0.8
+  _powerupTurnChangeWait: 1.5
   _hoverMat: {fileID: 2100000, guid: 5737b2a2145f48246a0d68aca5630fd1, type: 2}
   _selectMat: {fileID: 2100000, guid: 1f3530bb86258a24eb67ed886f93dbed, type: 2}
   _validMat: {fileID: 2100000, guid: fa69f72f41417854cab1c22d84581efd, type: 2}
@@ -559,6 +561,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _taskBarHandler: {fileID: 443789421}
+--- !u!114 &111801769
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 111801763}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 43d79aaab1716104cadf73be307107f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &156610293
 GameObject:
   m_ObjectHideFlags: 0
@@ -1233,7 +1247,7 @@ MonoBehaviour:
             m_IntArgument: 0
             m_FloatArgument: 0
             m_StringArgument: 
-            m_BoolArgument: 0
+            m_BoolArgument: 1
           m_CallState: 2
   - eventID: 1
     callback:
@@ -1261,7 +1275,7 @@ MonoBehaviour:
             m_IntArgument: 0
             m_FloatArgument: 0
             m_StringArgument: 
-            m_BoolArgument: 1
+            m_BoolArgument: 0
           m_CallState: 2
 --- !u!1 &553508973
 GameObject:
@@ -1296,7 +1310,7 @@ MonoBehaviour:
   _rayDistance: 20
   _rayLayerMask:
     serializedVersion: 2
-    m_Bits: 96
+    m_Bits: 64
 --- !u!4 &553508975
 Transform:
   m_ObjectHideFlags: 0
@@ -1991,8 +2005,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 111801768}
-        m_TargetAssemblyTypeName: GameplayManager, Assembly-CSharp
+      - m_Target: {fileID: 111801769}
+        m_TargetAssemblyTypeName: PowerupManager, Assembly-CSharp
         m_MethodName: ProcessPowerup
         m_Mode: 3
         m_Arguments:
@@ -2155,8 +2169,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 111801768}
-        m_TargetAssemblyTypeName: GameplayManager, Assembly-CSharp
+      - m_Target: {fileID: 111801769}
+        m_TargetAssemblyTypeName: PowerupManager, Assembly-CSharp
         m_MethodName: ProcessPowerup
         m_Mode: 3
         m_Arguments:
@@ -3378,8 +3392,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 111801768}
-        m_TargetAssemblyTypeName: GameplayManager, Assembly-CSharp
+      - m_Target: {fileID: 111801769}
+        m_TargetAssemblyTypeName: PowerupManager, Assembly-CSharp
         m_MethodName: ProcessPowerup
         m_Mode: 3
         m_Arguments:
@@ -3603,8 +3617,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 111801768}
-        m_TargetAssemblyTypeName: GameplayManager, Assembly-CSharp
+      - m_Target: {fileID: 111801769}
+        m_TargetAssemblyTypeName: PowerupManager, Assembly-CSharp
         m_MethodName: ProcessPowerup
         m_Mode: 3
         m_Arguments:
@@ -4154,8 +4168,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 111801768}
-        m_TargetAssemblyTypeName: GameplayManager, Assembly-CSharp
+      - m_Target: {fileID: 111801769}
+        m_TargetAssemblyTypeName: PowerupManager, Assembly-CSharp
         m_MethodName: ProcessPowerup
         m_Mode: 3
         m_Arguments:
@@ -4218,7 +4232,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _buttonImage: {fileID: 1122977199}
   _whiteSprite: {fileID: 21300000, guid: 57233e29d8cab4a4e86daee9c6eb5e1c, type: 3}
-  _blackSprite: {fileID: 21300000, guid: 1bbb495de2536c748b57c7a0a981acce, type: 3}
+  _blackSprite: {fileID: 21300000, guid: 307ac31c9442b1444801c5a6db1524cd, type: 3}
   _costText: {fileID: 1951725760}
   _whiteColor: {r: 0, g: 0, b: 0, a: 1}
   _blackColor: {r: 1, g: 1, b: 1, a: 1}
@@ -4469,8 +4483,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 111801768}
-        m_TargetAssemblyTypeName: GameplayManager, Assembly-CSharp
+      - m_Target: {fileID: 111801769}
+        m_TargetAssemblyTypeName: PowerupManager, Assembly-CSharp
         m_MethodName: ProcessPowerup
         m_Mode: 3
         m_Arguments:

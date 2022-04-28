@@ -2,17 +2,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BishopPowerup : MonoBehaviour
+public class BishopPowerup : PowerupBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public override void ProcessPowerup()
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        Tile[,] tileSet = BoardManager.Instance.TileSet;
+        foreach (Vector2Int validMove in _owningPiece.ValidMoves)
+        {
+            if (validMove != -Vector2Int.one)
+            {
+                Tile tile = tileSet[validMove.y, validMove.x];
+                if (tile.HeldPiece &&
+                    tile.HeldPiece.PieceData.PlayerType == _owningPiece.PieceData.PlayerType)
+                {
+                    tile.ToggleBishopBarrier(true);
+                }
+            }
+        }
     }
 }

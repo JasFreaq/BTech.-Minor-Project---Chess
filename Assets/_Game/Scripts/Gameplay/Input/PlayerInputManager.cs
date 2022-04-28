@@ -12,6 +12,13 @@ public class PlayerInputManager : InputManager
     
     private Tile _hoveredTile;
 
+    private bool _overUI;
+
+    public bool OverUI
+    {
+        set => _overUI = value;
+    }
+
     void Start()
     {
         _mainCamera = Camera.main;
@@ -19,7 +26,8 @@ public class PlayerInputManager : InputManager
     
     protected override void ProcessInput()
     {
-        Process3DInput();
+        if (!_overUI)
+            Process3DInput();
     }
 
     private void Process3DInput()
@@ -31,7 +39,7 @@ public class PlayerInputManager : InputManager
             bool foundValidMove = false;
             Tile currentHoveredTile = BoardManager.Instance.TileRefs[hit.collider.GetInstanceID()];
 
-            if (_isPieceSelected)
+            if (PieceManager.Instance.CurrentSelection)
             {
                 List<Vector2Int> possibleMoves = PieceManager.Instance.CurrentSelection.PossibleMoves;
                 Vector2Int tileIndex = new Vector2Int(currentHoveredTile.Index.y, currentHoveredTile.Index.x);
@@ -72,7 +80,7 @@ public class PlayerInputManager : InputManager
                 SetTileSelection(_hoveredTile);
                 _hoveredTile = null;
             }
-            else if (_isPieceSelected)
+            else if (PieceManager.Instance.CurrentSelection)
             {
                 UnselectTile();
                 PieceManager.Instance.UnselectPiece();
@@ -85,10 +93,10 @@ public class PlayerInputManager : InputManager
         if (_hoveredTile != currentHoveredTile)
         {
             if (_hoveredTile)
-                _hoveredTile.SetHover(_isPieceSelected, false);
+                _hoveredTile.SetHover(PieceManager.Instance.CurrentSelection, false);
 
             _hoveredTile = currentHoveredTile;
-            _hoveredTile.SetHover(_isPieceSelected, true);
+            _hoveredTile.SetHover(PieceManager.Instance.CurrentSelection, true);
         }
     }
     
@@ -96,18 +104,18 @@ public class PlayerInputManager : InputManager
     {
         if (_hoveredTile)
         {
-            _hoveredTile.SetHover(_isPieceSelected, false);
+            _hoveredTile.SetHover(PieceManager.Instance.CurrentSelection, false);
             _hoveredTile = null;
         }
     }
 
-    public override void UnselectTile(bool movedToTile = false)
+    public override void UnselectTile()
     {
         UnhoverTile();
 
         if (_currentSelectedTile) 
         {
-            base.UnselectTile(movedToTile);
+            base.UnselectTile();
         }
     }
 }

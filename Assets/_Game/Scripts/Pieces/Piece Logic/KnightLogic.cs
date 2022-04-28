@@ -44,15 +44,19 @@ public class KnightLogic : PieceLogic
     {
         foreach (Vector2Int validMove in piece.ValidMoves)
         {
-            PieceBehaviour heldPiece = BoardManager.Instance.TileSet[validMove.y, validMove.x].HeldPiece;
+            Tile tile = BoardManager.Instance.TileSet[validMove.y, validMove.x];
+            PieceBehaviour heldPiece = tile.HeldPiece;
             if (heldPiece)
             {
                 if (heldPiece.PieceData.PlayerType != piece.PieceData.PlayerType)
                 {
-                    piece.PossibleMoves.Add(validMove);
+                    if (!tile.BishopBarrierActive)
+                    {
+                        piece.PossibleMoves.Add(validMove);
+                    }
                 }
             }
-            else
+            else if (!tile.RookWallActive)
             {
                 piece.PossibleMoves.Add(validMove);
             }

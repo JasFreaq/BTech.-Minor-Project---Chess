@@ -47,42 +47,59 @@ public class PawnLogic : PieceLogic
 
         if (piece.ValidMoves.Count > 0)
         {
-            ProcessEnPassant(piece);
+            ProcessPawnCapture(piece);
         }
     }
 
-    private static void ProcessEnPassant(PieceBehaviour piece)
+    private static void ProcessPawnCapture(PieceBehaviour piece)
     {
         int enPassantRow;
+        int enPassantIncrement;
         if (piece.PieceData.PlayerType == PlayerType.White)
         {
             enPassantRow = 5;
+            enPassantIncrement = -1;
         }
         else
         {
             enPassantRow = 2;
+            enPassantIncrement = 1;
         }
 
         Vector2Int firstMove = piece.ValidMoves[0];
         if (firstMove.x > 0)
         {
             Vector2Int move = firstMove + new Vector2Int(-1, 0);
-            Tile tile = BoardManager.Instance.TileSet[move.y, move.x];
-            PieceBehaviour heldPiece = tile.HeldPiece;
-            if ((heldPiece && heldPiece.PieceData.PlayerType != piece.PieceData.PlayerType)
-                || (firstMove.y == enPassantRow && tile.EnPassant))
-            {
-                piece.PossibleMoves.Add(move);
-            }
+            ProcessCaptureTile(piece, move, enPassantRow, enPassantIncrement);
         }
 
         if (firstMove.x < 7)
         {
             Vector2Int move = firstMove + new Vector2Int(1, 0);
-            Tile tile = BoardManager.Instance.TileSet[move.y, move.x];
-            PieceBehaviour heldPiece = tile.HeldPiece;
-            if ((heldPiece && heldPiece.PieceData.PlayerType != piece.PieceData.PlayerType)
-                || (firstMove.y == enPassantRow && tile.EnPassant))
+            ProcessCaptureTile(piece, move, enPassantRow, enPassantIncrement);
+        }
+    }
+
+    private static void ProcessCaptureTile(PieceBehaviour piece, Vector2Int move,
+        int enPassantRow, int enPassantIncrement)
+
+    {
+        Tile tile = BoardManager.Instance.TileSet[move.y, move.x];
+        PieceBehaviour heldPiece = tile.HeldPiece;
+        if (heldPiece)
+        {
+            if (heldPiece.PieceData.PlayerType != piece.PieceData.PlayerType)
+            {
+                if (!tile.BishopBarrierActive)
+                {
+                    piece.PossibleMoves.Add(move);
+                }
+            }
+        }
+        else if (move.y == enPassantRow && tile.EnPassant)
+        {
+            Tile enPassantTile = BoardManager.Instance.TileSet[move.y + enPassantIncrement, move.x];
+            if (!enPassantTile.BishopBarrierActive)
             {
                 piece.PossibleMoves.Add(move);
             }

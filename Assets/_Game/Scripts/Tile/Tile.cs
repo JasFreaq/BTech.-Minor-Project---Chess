@@ -9,6 +9,8 @@ public class Tile : MonoBehaviour
     private static readonly float VisibleAlpha = 0.6078f;
     
     [SerializeField] private GameObject _highlightBorder;
+    [SerializeField] private GameObject _rookWall;
+    [SerializeField] private GameObject _bishopBarrier;
 
     private BoxCollider _collider;
     private Image _image;
@@ -18,6 +20,8 @@ public class Tile : MonoBehaviour
 
     private bool _enPassant;
     private int _enPassantCounter;
+    private int _rookWallCounter;
+    private int _barrierBishopCounter;
 
     public BoxCollider Collider => _collider;
 
@@ -36,6 +40,10 @@ public class Tile : MonoBehaviour
             _enPassantCounter = 0;
         }
     }
+
+    public bool RookWallActive => _rookWall.activeInHierarchy;
+    
+    public bool BishopBarrierActive => _bishopBarrier.activeInHierarchy;
 
     private void Awake()
     {
@@ -131,7 +139,14 @@ public class Tile : MonoBehaviour
         _highlightBorder.SetActive(false);
     }
 
-    public void ProcessEnPassant()
+    public void ProcessConditions()
+    {
+        ProcessEnPassant();
+        ProcessRookWall();
+        ProcessBishopBarrier();
+    }
+
+    private void ProcessEnPassant()
     {
         if (_enPassantCounter > 0)
         {
@@ -142,5 +157,43 @@ public class Tile : MonoBehaviour
         {
             _enPassantCounter++;
         }
+    }
+    
+    private void ProcessRookWall()
+    {
+        if (_rookWallCounter > 0)
+        {
+           _rookWall.SetActive(false);
+        }
+
+        if (RookWallActive) 
+        {
+            _rookWallCounter++;
+        }
+    }
+    
+    private void ProcessBishopBarrier()
+    {
+        if (_barrierBishopCounter > 0)
+        {
+            _bishopBarrier.SetActive(false);
+        }
+
+        if (BishopBarrierActive) 
+        {
+            _barrierBishopCounter++;
+        }
+    }
+
+    public void ToggleRookWall(bool toggle)
+    {
+        _rookWall.SetActive(toggle);
+        _rookWallCounter = 0;
+    }
+
+    public void ToggleBishopBarrier(bool toggle)
+    {
+        _bishopBarrier.SetActive(toggle);
+        _barrierBishopCounter = 0;
     }
 }

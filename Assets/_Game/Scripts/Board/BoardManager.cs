@@ -15,7 +15,6 @@ public class BoardManager : MonoBehaviour
     private readonly Dictionary<int, Tile> _tileRefs = new Dictionary<int, Tile>(64);
 
     private List<Tile> _highlightedTiles = new List<Tile>();
-    private List<Tile> _enPassantTiles = new List<Tile>();
 
     #region Singleton Pattern
 
@@ -60,11 +59,6 @@ public class BoardManager : MonoBehaviour
                 
                 _tileSet[i, j] = tile;
                 _tileRefs.Add(tile.Collider.GetInstanceID(), tile);
-
-                if (i == 2 || i == 5)
-                {
-                    _enPassantTiles.Add(tile);
-                }
             }
         }
     }
@@ -98,11 +92,11 @@ public class BoardManager : MonoBehaviour
         _highlightedTiles.Clear();
     }
 
-    public void ProcessEnPassant()
+    public void ProcessConditions()
     {
-        foreach (Tile enPassantTile in _enPassantTiles)
+        foreach (Tile tile in TileSet)
         {
-            enPassantTile.ProcessEnPassant();
+            tile.ProcessConditions();
         }
     }
 }

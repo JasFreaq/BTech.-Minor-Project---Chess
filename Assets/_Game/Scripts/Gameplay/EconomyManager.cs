@@ -48,6 +48,20 @@ public class EconomyManager : MonoBehaviour
             UIManager.Instance.ChangeCurrencyText(_whiteValue);
         }
     }
+    
+    public void AddValue(PlayerType playerType, int pieceValue)
+    {
+        if (playerType == PlayerType.White)
+        {
+            _blackValue += pieceValue;
+            UIManager.Instance.ChangeCurrencyText(_blackValue);
+        }
+        else
+        {
+            _whiteValue += pieceValue;
+            UIManager.Instance.ChangeCurrencyText(_whiteValue);
+        }
+    }
 
     public int[] GetCosts(PlayerType player)
     {
@@ -69,12 +83,11 @@ public class EconomyManager : MonoBehaviour
             {
                 _whiteValue -= cost;
                 _whiteCosts[index] *= 2;
+                UIManager.Instance.ChangeCurrencyText(_whiteValue);
                 return true;
             }
-            else
-            {
-                return false;
-            }
+            
+            return false;
         }
         else
         {
@@ -83,12 +96,11 @@ public class EconomyManager : MonoBehaviour
             {
                 _blackValue -= cost;
                 _blackCosts[index] *= 2;
+                UIManager.Instance.ChangeCurrencyText(_blackValue);
                 return true;
             }
-            else
-            {
-                return false;
-            }
+            
+            return false;
         }
     }
 }

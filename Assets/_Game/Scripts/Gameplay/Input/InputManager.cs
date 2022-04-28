@@ -10,8 +10,6 @@ public abstract class InputManager : MonoBehaviour
     protected Tile _currentSelectedTile;
     protected Tile _previousSelectedTile;
 
-    protected bool _isPieceSelected;
-
     private void Update()
     {
         if (!GameplayManager.Instance.GameOver)
@@ -89,6 +87,7 @@ public abstract class InputManager : MonoBehaviour
             capturedPiece = enPassantCaptureTile.HeldPiece;
             enPassantCaptureTile.HeldPiece = null;
 
+            EconomyManager.Instance.AddValue(capturedPiece.PieceData.PlayerType, 5);
         }
         else
         {
@@ -106,7 +105,6 @@ public abstract class InputManager : MonoBehaviour
         BoardManager.Instance.ResetHighlightedTiles();
         PieceBehaviour currentSelection = PieceManager.Instance.CurrentSelection;
         Tile currentSelectedTile = _currentSelectedTile;
-        UnselectTile(true);
 
         yield return GameplayManager.Instance.MoveSelectedPieceRoutine(currentSelectedTile.Index);
         yield return ProcessSpecialMovesRoutine(currentSelection, currentSelectedTile);
@@ -140,6 +138,7 @@ public abstract class InputManager : MonoBehaviour
         if (currentIndex.x == 0 || currentIndex.x == 7)
         {
             yield return GameplayManager.Instance.ProcessPromotionRoutine(currentSelection);
+            yield return new WaitForSeconds(SceneParamsHolder.Instance.PowerupTurnChangeWait);
         }
     }
 
@@ -155,16 +154,13 @@ public abstract class InputManager : MonoBehaviour
     {
         _currentSelectedTile = tile;
         _currentSelectedTile.SetSelection(true);
-        _isPieceSelected = true;
     }
 
-    public virtual void UnselectTile(bool movedToTile = false)
+    public virtual void UnselectTile()
     {
-        if (movedToTile) 
-            _currentSelectedTile.ResetStates();
+        _currentSelectedTile.ResetStates();
         _currentSelectedTile.SetSelection(false);
 
         _currentSelectedTile = null;
-        _isPieceSelected = false;
     }
 }
